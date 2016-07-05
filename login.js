@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("oper.js loaded");
+	var ele = document.querySelector('.ip').focus();
 });
 
 function sendM(){
@@ -11,12 +12,4 @@ function sendM(){
 			}
 		});
 		return null;
-}
-
-function myFunction(){
-	console.log("Clicked Button 1");
-	var pass = document.querySelector('.pw').value;
-	console.log("Entered Password : " + pass);
-	console.log("Password Length : " + pass.length);
-	document.querySelector('.pw').value = "";
 }
