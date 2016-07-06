@@ -12,6 +12,7 @@
 				background-size: cover;
 				width: 100%;
 				height: 100%;
+				overflow-y: hidden;
 			}
 			
 			.content{
@@ -24,6 +25,26 @@
 				height: 600px;
 				margin: 50px;
 			}
+			p{
+				font-size: 18px;
+			}
+			.main{
+				border-radius: 25px;
+				border-width: 5px;
+				border-style: groove;
+				border-color: lightgrey;
+				overflow-y: scroll;
+				height: 400px;
+			}
+			button{
+				margin: 20px;
+			}
+			hr{
+				border-radius: 1px;
+				height: 3px;
+				color: lightgrey;
+				background-color: lightgrey;
+			}
 		</style>
 	</head>
 	
@@ -31,6 +52,20 @@
 		<center>
 			<div class="content">
 				<img src="/Images/Logo-no-bg.jpg" width="300px" height="100px" />
+				<div class="main">
+					<h3 class="topic1"></h1>
+					<div class="magicbox">
+						<p> Enter Old Password  : </p>
+						<input class="oldpw" type="password"></input>
+					</div>
+					<p> Enter new password : </p>
+					<input class="newpw1" type="password"></input>
+					<p>Re-enter new password : </p>
+					<input class="newpw2" type="password"></input>
+					<br />
+					<button class="bt1">Save Changes</button>
+					<hr />
+				</div>
 			</div>
 		</center>
 	</body>
