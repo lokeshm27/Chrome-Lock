@@ -1,6 +1,6 @@
 var tmString1 = "Chrome Lock will automatically lock your browser after "
 var timeOut;
-var tmSting2 = "mins of Inactivity. Minimum = 2mins. Maximum = 30mins <br /> <strong>Note: </strong>This option is still in beta-stage. May not work perfectly.</strong>"
+var tmSting2 = "mins of Inactivity. Minimum = 2mins. Maximum = 30mins. <br /> <strong>Note: </strong>This option is still in beta-stage. May not work perfectly.</strong>"
 var encrPasswd;
 
 document.addEventListener('DOMContentLoaded', function(){
@@ -33,5 +33,5 @@ document.addEventListener('DOMContentLoaded', function(){
 	}
 	
 	document.querySelector('.tm').innerHTML += tmString1 + timeOut + tmSting2;
-	document.querySelector('.main').focus();
+	document.querySelector('.timeOut').value = timeOut;
 });
