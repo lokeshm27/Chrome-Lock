@@ -6,11 +6,24 @@ var attempts = 0;
 var resp;
 var lockedWins = [];
 var hutoia;
+var optionsPage = "options.html";
 
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("Chrome Locker is in Action");
 	onInit();
+});
+
+chrome.runtime.onInstalled.addListener(function (details){
+	chrome.local.storage.get({'encrPasswd' : []}, function (data){
+		if(data.encrPasswd == undefined){
+			chrome.tabs.create({
+				url: optionsPage;
+				active: true;
+				pinned: false;
+			});
+		}
+	});
 });
 
 function onInit(){
