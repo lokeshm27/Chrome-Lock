@@ -66,6 +66,11 @@ function op2msot(){
 }
 
 function op2mscl(){
+	chrome.tabs.create({
+		url: "options.html",
+		active: true,
+		pinned: false
+	});
 	window.close();
 }
 

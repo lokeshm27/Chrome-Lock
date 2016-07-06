@@ -18,9 +18,9 @@ chrome.runtime.onInstalled.addListener(function (details){
 	chrome.local.storage.get({'encrPasswd' : []}, function (data){
 		if(data.encrPasswd == undefined){
 			chrome.tabs.create({
-				url: optionsPage;
-				active: true;
-				pinned: false;
+				url: optionsPage,
+				active: true,
+				pinned: false
 			});
 		}
 	});
