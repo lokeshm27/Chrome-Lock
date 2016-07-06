@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("oper.js loaded");
-	var ele = document.querySelector('.ip').focus();
+	document.querySelector('.ip').focus();
 });
 
 function sendM(){
