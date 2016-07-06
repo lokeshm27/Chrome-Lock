@@ -18,6 +18,7 @@
 			.buttonLayout{
 				width: 500px;
 				height: 300px;
+				margin-left: 30px;
 			}
 			
 			.content{
@@ -31,35 +32,39 @@
 				margin: 50px;
 			}
 			p{
-				font-size: 18px;
+				font-size: 14px;
+				margin-left: 25px;
 			}
 			button{
 				margin: 10px;
+			}
+			input{
+				margin-left: 25px;
+				margin-bottom: 20px;
 			}
 		</style>
 	</head>
 	
 	<body>
-		<center>
-			<div class="content">
+		<div class="content">
+			<center>
 				<img src="/Images/logo-no-bg.jpg" alt="Chrome Lock Logo" width="300px" height="100px"/>
-				<p>
-					<strong>Chrome Lock has locked your chrome browser. Please enter password to unlock browser.
-					<br />Dont try anything Smart.
-						<div class="optional">
-							<br />You can use incognito window. <a href="" class="incog">Click here</a> to open a new incognito window.</strong>
-						</div>
-				</p>
-				&nbsp;
-				&nbsp;
+			</center>		
+			<p>Chrome Lock has locked your chrome browser. Please enter password to unlock browser. Please don't try anything Smart.</p>
+			<div class="optional">
+				<p>You can use incognito window. <a href="" class="incog">Click here</a> to open a new incognito window.</p>
+			</div>
+			&nbsp;
+			&nbsp;
+			<center>
 				<p><strong>Enter your Password : </strong></p>
 				<input type="password" class="ip"></input>
 				<div class="buttonLayout">
 					<button class="bt1">Unlock</button>
 					<button class="bt2">Forgot Password</button>
 				</div>
-			</div>
-		</center>
+			</center>
+		</div>
 	</body>
 </html>
 

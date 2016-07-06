@@ -25,48 +25,93 @@
 				height: 600px;
 				margin: 50px;
 			}
+			
 			p{
-				font-size: 18px;
+				font-size: 14px;
+				margin-left: 20px;
 			}
+			
 			.main{
 				border-radius: 25px;
 				border-width: 5px;
 				border-style: groove;
 				border-color: lightgrey;
 				overflow-y: scroll;
-				height: 400px;
+				height: 450px;
 			}
-			button{
-				margin: 20px;
+			
+			bt1{
+				margin-left: 35px;
 			}
+			
 			hr{
-				border-radius: 1px;
 				height: 3px;
 				color: lightgrey;
 				background-color: lightgrey;
+			}
+			
+			input{
+				margin-left: 20px;
+				margin-bottom: 15px;
+			}
+			h1{
+				margin-left: 20px;
+			}
+			.inRed{
+				color: red;
+			}
+			.footer{
+				background-color: #999999;
+				border-radius: 25px;
+				height: 50px;
+				width: 100%;
+			}
+			.ftbt1{
+				margin: 15px 20px 15px 0px;
+			}
+			.ftbt2{
+				margin: 15px 0px 20px 15px; 
 			}
 		</style>
 	</head>
 	
 	<body>
-		<center>
-			<div class="content">
+		<div class="content">
+			<center>
 				<img src="/Images/Logo-no-bg.jpg" width="300px" height="100px" />
-				<div class="main">
-					<h3 class="topic1"></h1>
-					<div class="magicbox">
-						<p> Enter Old Password  : </p>
-						<input class="oldpw" type="password"></input>
-					</div>
-					<p> Enter new password : </p>
-					<input class="newpw1" type="password"></input>
-					<p>Re-enter new password : </p>
-					<input class="newpw2" type="password"></input>
-					<br />
-					<button class="bt1">Save Changes</button>
-					<hr />
-				</div>
+			</center>
+			<div class="main">
+				<h1 class="topic1">Change Password</h1>
+				<p><strong class="p1">Enter Old Password :</strong></p>
+				<input class="ip1" type="password"></input>
+				<p><strong class="p2">Enter new password :</strong></p>
+				<input class="ip2" type="password"></input>
+				<p><strong class="p3">Re-enter new password :</strong></p>
+				<input class="ip3" type="password"></input>
+				<p class="magicbox">(<strong class="inRed">*Optional</strong>) Password hint helps you to remember password in case if you forget your password.</p>
+				<p><button class="bt1">Save Changes</button></p>
+				<hr />
+				<h1>Incognito Window</h1>
+				<p>
+					<input type="checkbox" checked><strong>Allow people to use incognito window.</strong></input><br />
+					When deselected, Chrome Lock will force minimize incognito window whenever a incognito is opened. <br />
+					<strong>Note: </strong>This option is still in beta-stage. May not work perfectly.</strong>
+				</p>
+				<br />
+				<hr />
+				<br />
+				<h1> Inactivity Timeout </h1>
+				<p class="tm">
+					<strong>Enter number minutes to wait before locking browser : </strong> <br /><br />
+					<input  class="timeOut" type="number" min="2" max="30" width="5px"></input> <br />
+				</p>
 			</div>
-		</center>
+			<div class="footer">
+				<center>
+					<button class="ftbt1">Save Change</button>
+					<button class="ftbt2">Cancel</button>
+				</center>
+			</div>
+		</div>
 	</body>
 </html>
