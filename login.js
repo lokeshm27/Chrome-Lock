@@ -1,8 +1,24 @@
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("oper.js loaded");
-	document.querySelector('.ip').focus();
+	var ele = document.querySelector('.ip');
+	ele.focus();
+	ele.addEventListener("keypress", function(e){
+		if(e.keyCode == 13){
+			subclick();
+		}
+	});
+	document.querySelector('.bt1').addEventListener("click", subclick);
+	document.querySelector('.bt2').addEventListener("click", forclick);
 });
+
+function subclick(){
+	alert("Sumbit button clicked");
+}
+
+function forclick(){
+	alert("Forgot button clicked");
+}
 
 function sendM(){
 	chrome.runtime.sendMessage({method : "codeRed", code : "248057"},
