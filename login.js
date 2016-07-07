@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelector('.bt2').addEventListener("click", forclick);
 });
 
+window.onbeforeunload = sendM;
+
 function subclick(){
 	alert("Sumbit button clicked");
 }

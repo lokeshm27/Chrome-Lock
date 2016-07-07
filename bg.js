@@ -7,16 +7,61 @@ var resp;
 var lockedWins = [];
 var hutoia;
 var optionsPage = "options.html";
+var randomDigs = [];
+var i;
+var encrPasswd;
+var pfl = false;
 
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("Chrome Locker is in Action");
-	onInit();
+	chrome.storage.local.get('hutoia', function(data){
+		hutoia = data.hutoia;
+	});
+	switch(hutoia){
+		case undefined :    //check if password is set, If yes, Lock browser.
+							console.log("Case : Undefined.")
+							chrome.storage.local.get({'encrPasswd' : []}, function (data){
+								if(!(data.encrPasswd.length == 0)){
+									console.log("Locking Browser.!");
+									lockBrowser({'method': "codeRed", 'code': "248057"});
+									chrome.storage.local.set({'hutoia' : false});
+								}
+							});
+							break;
+							
+		case false :  	console.log("Case: flase\nLocking..");
+						lockBrowser({'method': "codeRed", 'code': "248057"});
+						break;
+						
+		case true : console.log("case : true"); 
+					//timeoutHandler();
+	}
 });
 
+window.onbeforeunload = function(){
+	chrome.storage.local.get('hutoia', function(data){
+		if(data.hutoia == true){
+			chrome.storage.local.set({'hutoia': false});
+		}
+	})
+}
+
 chrome.runtime.onInstalled.addListener(function (details){
-	chrome.local.storage.get({'encrPasswd' : []}, function (data){
-		if(data.encrPasswd == undefined){
+	chrome.storage.local.get({'randomDigs': []}, function (data){
+	if(data.randomDigs.length==0){
+		console.log("Generating random Numbers.!");
+		for(i=0;i<=50;i++){
+			num = Math.floor((Math.random() * 3 ) + 1); 
+			randomDigs.push(num);
+		}
+		chrome.storage.local.set({'randomDigs' : randomDigs });
+		console.log("Random Numbers Generated.!");
+		}
+	});
+	
+	chrome.storage.local.get({'encrPasswd' : []}, function (data){
+		if(data.encrPasswd.length == 0){
 			chrome.tabs.create({
 				url: optionsPage,
 				active: true,
@@ -26,24 +71,36 @@ chrome.runtime.onInstalled.addListener(function (details){
 	});
 });
 
-function onInit(){
-	chrome.storage.local.get('hutoia', function(data){
-		hutoia = data.hutoia;
-	});
-	
-	if(hutoia ==  undefined){
-		//set hutoia key
-		chrome.storage.local.set({'hutoia' : false});
-	}else if(hutoia == false){
-		console.log("Locking");
-		lockBrowser();
-	}else{
-		timeoutHandler();
-	}
+function randomChar(){
+	 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	 return (possible.charAt(Math.floor(Math.random() * possible.length)));
 }
 
 chrome.windows.onCreated.addListener(function() {
-	onInit();
+	chrome.storage.local.get('hutoia', function(data){
+		hutoia = data.hutoia;
+		console.log(data.hutoia);
+	});
+	
+	if(hutoia==undefined){
+		//set hutoia key
+		chrome.storage.local.set({'hutoia' : false});
+		
+		//check if password is set, If yes, Lock browser.
+		chrome.storage.local.get({'encrPasswd' : []}, function (data){
+			encrPasswd = data.encrPasswd;
+		});
+		if(!(encrPasswd == undefined)){
+			console.log("Locking Browser.!");
+			lockBrowser({'method': "codeRed", 'code': "248057"});
+		}
+		
+	}else if(hutoia==false){
+		console.log("Locking");
+		lockBrowser({'method': "codeRed", 'code': "248057"});
+	}else{
+		timeoutHandler();
+	}
 });
 
 chrome.runtime.onMessage.addListener(
@@ -58,7 +115,6 @@ chrome.runtime.onMessage.addListener(
 			case "codeYellow" : resp = lockBrowser(request);
 								break;
 		}
-		
 		sendResponse({methodReturn : resp});
 });
 
