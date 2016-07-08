@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded', function(){
 			mode="change";
 			console.log("Change password mode");
 			document.querySelector('.magicbox').style.visibility = 'hidden';
+			document.querySelector('.p4').innerHTML = "Enter Password Hint : ";
+			document.querySelector('.div1').innerHTML = "<input class=\"ip4\" type=\"text\"></input>"
 		}
 	});
 	
@@ -74,11 +76,13 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 function bt1cl(){
-	var data1,data2,passwdLength,data3,u=0,j,passwd,i,chr,numRandomDigs,charPasswd = [],startRandomDigs;
+	var data1,data2,passwdLength,data3,data4,u=0,j,passwd,i,chr,numRandomDigs,charPasswd = [],startRandomDigs;
 	var flag = false;
+	var flag1 = false;
 	data1 = ip1.value;
 	data2 = ip2.value;
 	data3 = ip3.value;
+	var ip4;
 	
 	if(mode == "set"){
 		// Password set mode.
@@ -114,7 +118,6 @@ function bt1cl(){
 						}
 					}
 					
-					console.log(encrPasswd);
 					console.log("Storing password.");
 					
 					chrome.storage.local.set({'bhfyda': data1.length});
@@ -127,19 +130,18 @@ function bt1cl(){
 						chrome.storage.local.set({'aspire': false});
 					}
 					
-					console.log("All done.!");
-					alert("Password Change Successful.!");
+					alert("Password saved.!");
 				}
 			}
 		}
 	}else{
 		//pasword change mode
 		console.log("Decrypting password.");
-		console.log(encrPasswd);
+		ip4 = document.querySelector('.ip4');
+		data4 = ip4.value;
 		
-		chrome.storage.local.get('bhfyda', function (data1){
-			console.log(data1.bhfyda);
-			passwdLength = data1.bhfyda;
+		chrome.storage.local.get('bhfyda', function (dat1){
+			passwdLength = dat1.bhfyda;
 
 			chrome.storage.local.get('hyskal', function (data){
 				numRandomDigs = passwdLength + 1;
@@ -160,7 +162,64 @@ function bt1cl(){
 				}
 				
 				passwd = charPasswd.join("");
-				console.log(passwd);
+				
+				if(data1.length == 0){
+					alert("Please enter current password.!");
+				}else{
+					if(data2.length == 0){
+						alert("New password can not be empty.!");
+					}else if(data2.length < 4){
+						alert("Password should be atleast 5 characters.!");
+					}else{
+						if(data3.length == 0){
+							alert("Please re-enter the password.!");
+						}else if(!(data2 == data3)){
+							alert("Password you have entered didn't match.!");
+						}else{
+							if(!(data1 == passwd)){
+								alert("Old Password incorrect.!");
+								data1.value = "";
+							}else{
+								if(data4.length == 0){
+									flag2 = confirm("You have not entered password hint.\nHint helps you to remember password.\nAre you sure to continue without password hint?");
+								}
+				
+								if((data4.length != 0) || (flag2)){
+									console.log("Encrypting Password");
+				
+									ip1.value = ip2.value = ip3.value = ip4.value = "";
+									startRandomDigs = Math.floor((Math.random() *35) + 5);
+									numRandomDigs = data2.length + 1;
+									charPasswd = data2.split('');
+				
+									for(j=startRandomDigs;j<startRandomDigs+numRandomDigs;j++){
+										for(i=0;i<randomDigs[j];i++){
+											encrPasswd.push(randomChar());
+										}
+										if(u < data2.length){
+											encrPasswd.push(charPasswd[u]);
+											u++;
+										}
+									}
+									
+									console.log("Storing password.");
+					
+									chrome.storage.local.set({'bhfyda': data2.length});
+									chrome.storage.local.set({'encrPasswd': encrPasswd});
+									chrome.storage.local.set({'hyskal': startRandomDigs});
+									if(data4.length != 0){
+										chrome.storage.local.set({'aspire': true});
+										chrome.storage.local.set({'hint': data4});
+									}else{
+										chrome.storage.local.set({'aspire': false});
+									}
+									
+									alert("Password Change successful.!");
+								}
+							}
+						}
+					}
+				}
 			});
 		});
 	}
@@ -171,7 +230,10 @@ function bt2cl(){
 }
 
 function bt3cl(){
-	alert("Button 3");
+	var flag = confirm("Are sure to exit.? Changes may not be saved.!");
+	if(flag == true){
+		window.close();
+	}
 }
 
 function randomChar(){
