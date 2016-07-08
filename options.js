@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function(){
 	});
 	
 	chrome.storage.local.get({'encrPasswd': []}, function(data){
-		encrPasswd.push(data.encrPasswd);
+		encrPasswd = data.encrPasswd.slice();
 		if(encrPasswd.length == 0){
 			mode="set";
 			console.log("Set password Mode...");
@@ -74,13 +74,14 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 function bt1cl(){
-	var data1,data2,data3,u=0,j,i,numRandomDigs,charPasswd = [],startRandomDigs;
+	var data1,data2,passwdLength,data3,u=0,j,passwd,i,chr,numRandomDigs,charPasswd = [],startRandomDigs;
 	var flag = false;
 	data1 = ip1.value;
 	data2 = ip2.value;
 	data3 = ip3.value;
 	
 	if(mode == "set"){
+		// Password set mode.
 		if(data1.length == 0){
 			alert("Password can not be empty.!");
 		}else if(data1.length < 4){
@@ -132,7 +133,36 @@ function bt1cl(){
 			}
 		}
 	}else{
+		//pasword change mode
+		console.log("Decrypting password.");
+		console.log(encrPasswd);
 		
+		chrome.storage.local.get('bhfyda', function (data1){
+			console.log(data1.bhfyda);
+			passwdLength = data1.bhfyda;
+
+			chrome.storage.local.get('hyskal', function (data){
+				numRandomDigs = passwdLength + 1;
+				j=0;
+				u=0;
+				startRandomDigs = data.hyskal;
+				
+				for(i=startRandomDigs; i<(startRandomDigs + numRandomDigs);i++){
+					if(u==0){
+						j+=randomDigs[i];
+					}else{
+						j+=randomDigs[i]+1;
+					}
+					if(u<passwdLength){
+						charPasswd.push(encrPasswd[j]);
+						u++;
+					}
+				}
+				
+				passwd = charPasswd.join("");
+				console.log(passwd);
+			});
+		});
 	}
 }
 
