@@ -38,7 +38,12 @@ document.addEventListener('DOMContentLoaded', function(){
 			console.log("Change password mode");
 			document.querySelector('.magicbox').style.visibility = 'hidden';
 			document.querySelector('.p4').innerHTML = "Enter Password Hint : ";
-			document.querySelector('.div1').innerHTML = "<input class=\"ip4\" type=\"text\"></input>"
+			document.querySelector('.div1').innerHTML = "<input class=\"ip4\" type=\"text\"></input>";
+			document.querySelector('.ip4').addEventListener("keypress", function(e){
+				if(e.keyCode == 13){
+					bt1cl();
+				}
+			});
 		}
 	});
 	
