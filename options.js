@@ -88,6 +88,7 @@ function bt1cl(){
 	data2 = ip2.value;
 	data3 = ip3.value;
 	var ip4;
+	var unknown;
 	
 	if(mode == "set"){
 		// Password set mode.
@@ -113,10 +114,14 @@ function bt1cl(){
 					numRandomDigs = data1.length + 1;
 					charPasswd = data1.split('');
 				
+					console.log("startRandomDigs = " + startRandomDigs);
 					for(j=startRandomDigs;j<startRandomDigs+numRandomDigs;j++){
-						for(i=0;i<randomDigs[j];i++){
+						console.log("j = " + j);
+						console.log("randomDigs[j] = " + randomDigs[j])
+						for(i=1;i<randomDigs[j];i++){
 							encrPasswd.push(randomChar());
 						}
+						console.log(encrPasswd.length);
 						if(u < data1.length){
 							encrPasswd.push(charPasswd[u]);
 							u++;
@@ -153,20 +158,23 @@ function bt1cl(){
 				j=0;
 				u=0;
 				startRandomDigs = data.hyskal;
-				
+				console.log(startRandomDigs);
 				for(i=startRandomDigs; i<(startRandomDigs + numRandomDigs);i++){
-					if(u==0){
-						j+=randomDigs[i];
+					if(u == 0){
+						j += (randomDigs[i]-1);
 					}else{
-						j+=randomDigs[i]+1;
+						j += randomDigs[i];
 					}
 					if(u<passwdLength){
+						console.log("randomDigs[i] = " + randomDigs[i]);
+						console.log("j = " + j + ". encrPasswd[j] =" + encrPasswd[j]);
 						charPasswd.push(encrPasswd[j]);
 						u++;
 					}
 				}
 				
 				passwd = charPasswd.join("");
+				console.log(passwd);
 				
 				if(data1.length == 0){
 					alert("Please enter current password.!");
