@@ -113,22 +113,16 @@ function bt1cl(){
 					startRandomDigs = Math.floor((Math.random() *35) + 5);
 					numRandomDigs = data1.length + 1;
 					charPasswd = data1.split('');
-				
-					console.log("startRandomDigs = " + startRandomDigs);
+
 					for(j=startRandomDigs;j<startRandomDigs+numRandomDigs;j++){
-						console.log("j = " + j);
-						console.log("randomDigs[j] = " + randomDigs[j])
 						for(i=1;i<randomDigs[j];i++){
 							encrPasswd.push(randomChar());
 						}
-						console.log(encrPasswd.length);
 						if(u < data1.length){
 							encrPasswd.push(charPasswd[u]);
 							u++;
 						}
 					}
-					
-					console.log("Storing password.");
 					
 					chrome.storage.local.set({'bhfyda': data1.length});
 					chrome.storage.local.set({'encrPasswd': encrPasswd});
@@ -166,15 +160,12 @@ function bt1cl(){
 						j += randomDigs[i];
 					}
 					if(u<passwdLength){
-						console.log("randomDigs[i] = " + randomDigs[i]);
-						console.log("j = " + j + ". encrPasswd[j] =" + encrPasswd[j]);
 						charPasswd.push(encrPasswd[j]);
 						u++;
 					}
 				}
 				
 				passwd = charPasswd.join("");
-				console.log(passwd);
 				
 				if(data1.length == 0){
 					alert("Please enter current password.!");
@@ -215,8 +206,6 @@ function bt1cl(){
 										}
 									}
 									
-									console.log("Storing password.");
-					
 									chrome.storage.local.set({'bhfyda': data2.length});
 									chrome.storage.local.set({'encrPasswd': encrPasswd});
 									chrome.storage.local.set({'hyskal': startRandomDigs});
@@ -239,7 +228,40 @@ function bt1cl(){
 }
 
 function bt2cl(){
-	alert("Button 2");
+	var data1,data2,data3,data4,flag1,data5,flag0;
+	
+	flag0 = confirm("Are you sure to save changes ?");
+	
+	if(flag0){
+		data1 = document.querySelector('.ip1').value;
+		data2 = document.querySelector('.ip2').value;
+		data3 = document.querySelector('.ip3').value;
+		flag1 = document.querySelector('.cb1').checked;
+		data5 = document.querySelector('.timeOut').value;
+	
+		if(mode == "set"){
+			if((data1.length != 0) && (data2.length != 0) && (data3.length != 0)){
+				bt1cl();
+			}
+		}else{
+			data4 = document.querySelector('.ip4').value;
+			if((data1.length != 0) && (data2.length != 0) && (data3.length != 0) && (data4.length != 0)){
+				bt1cl();
+			}
+		}
+	
+		if((data5 < 2) || (data5 > 30)){
+			alert("Inactivity timeout should greater than 2mins and less than 30mins.!");
+			document.querySelector('.timeOut').value = 5;
+		}else{
+			chrome.storage.local.set({'uiower': flag1});
+			chrome.storage.local.set({'pporte': data5});
+			alert("Changes saved successfully.!");
+			window.close();
+		}
+	}else{
+		//do nothing
+	}
 }
 
 function bt3cl(){
