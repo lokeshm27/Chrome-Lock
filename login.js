@@ -1,5 +1,6 @@
 var passwd;
 var incog = false;
+var hint;
 
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
@@ -19,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		if(!(incog)){
 			document.querySelector('.optional').style.visibility = 'hidden';
 		}
-		console.log(incog);
 	});
 	
 });
@@ -31,7 +31,15 @@ function subclick(){
 }
 
 function forclick(){
-	alert("Forgot button clicked");
+	chrome.storage.local.get('aspire', function(d){
+		if(d.aspire){
+			chrome.storage.local.get('hint', function(d1){
+				alert("Password hint : \n" + d1.hint);
+			});
+		}else{
+			alert("Sorry, Password hint is not set.");
+		}
+	});
 }
 
 function incogclk(){
