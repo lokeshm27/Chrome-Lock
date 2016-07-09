@@ -1,6 +1,9 @@
+var passwd;
+var incog = false;
+
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
-	console.log("oper.js loaded");
+	console.log("login.js loaded");
 	var ele = document.querySelector('.ip');
 	ele.focus();
 	ele.addEventListener("keypress", function(e){
@@ -10,11 +13,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 	document.querySelector('.bt1').addEventListener("click", subclick);
 	document.querySelector('.bt2').addEventListener("click", forclick);
+	document.querySelector('.incog').addEventListener("click", incogclk);
 	chrome.storage.local.get('uiower', function(d1){
-		if(!(d1.uiower)){
+		incog = d1.uiower;
+		if(!(incog)){
 			document.querySelector('.optional').style.visibility = 'hidden';
 		}
+		console.log(incog);
 	});
+	
 });
 
 window.onbeforeunload = sendM;
@@ -25,6 +32,12 @@ function subclick(){
 
 function forclick(){
 	alert("Forgot button clicked");
+}
+
+function incogclk(){
+	if(incog){
+		chrome.windows.create({"incognito": true, "state": "maximized"});
+	}
 }
 
 function sendM(){
