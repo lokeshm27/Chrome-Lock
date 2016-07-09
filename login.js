@@ -1,6 +1,7 @@
 var incog = false;
 var data1,passwd,encrPasswd = [],passwdLength,i,j,u,randomDigs = [],charPasswd = [];
 var startRandomDigs,numRandomDigs;
+var veryImpFlag = false;
 
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
@@ -60,11 +61,13 @@ function subclick(){
 					}
 				}
 				passwd = charPasswd.join("");
+				console.log(passwd);
 				
 				if(data1 != passwd){
 					alert("Password incorrect.!");
 					ip.value = "";
 				}else{
+					veryImpFlag = true;
 					chrome.runtime.sendMessage({method : "codeGreen", code: "248057"},
 					function(response){
 						if(response.methodReturn == 0){
@@ -98,11 +101,13 @@ function incogclk(){
 }
 
 function sendM(){
-	chrome.runtime.sendMessage({method : "codeRed", code : "248057"},
-		function(response){
-			if(response.methodReturn == 0){
-				// Do Nothing
-			}
-		});
+	if(!veryImpFlag){
+		chrome.runtime.sendMessage({method : "codeRed", code : "248057"},
+			function(response){
+				if(response.methodReturn == 0){
+					// Do Nothing
+				}
+			});
 		return null;
+	}
 }

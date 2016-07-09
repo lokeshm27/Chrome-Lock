@@ -149,24 +149,28 @@ function lockBrowser(request){
 	}
 }
 
+function unLockBrowser(request){
+	return 0;
+}
+
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
-     lastActive = new Date();
-	try{
-		if (loginTabs != null) {
-			for(i = 0; i < loginTabs.length; i++) {
-				if(activeInfo.tabId == loginTabs[i].id) {
-					return;
-				}
+    lastActive = new Date();
+	if (loginTabs != null) {
+		for(i = 0; i < loginTabs.length; i++) {
+			if(activeInfo.tabId == loginTabs[i].id) {
+				return;
 			}
-
-			for(i=0;i<loginTabs.length;i++) {
-				if(activeInfo.windowId == loginTabs[i].windowId) {
-					chrome.tabs.update(loginTabs[i].id, { active : true } );
-				}
-			}         
 		}
-	}catch(e){
-			// If loginTab doesn't exist, Do nothing.
+			
+		for(i=0;i<loginTabs.length;i++) {
+			if(activeInfo.windowId == loginTabs[i].windowId) {
+				chrome.tabs.update(loginTabs[i].id, { active : true }, function(){
+					if(chrome.runtime.lastError){
+						// Login tab closed, Let the other thing handle this suitiation.!
+					}
+				});
+			}
+		}         
 	}
 });
