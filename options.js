@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function(){
 	console.log("options.js loaded");
 	
 	chrome.storage.local.get({'randomDigs' : []}, function (data){
-		randomDigs = data.randomDigs;
+		randomDigs = data.randomDigs.slice();;
 	});
 	
 	chrome.storage.local.get('uiower', function(d){
@@ -95,6 +95,8 @@ function bt1cl(){
 	data3 = ip3.value;
 	var ip4;
 	var unknown;
+	var passwdEncr = [];
+	var passwdChar = [];
 	
 	if(mode == "set"){
 		// Password set mode.
@@ -150,86 +152,90 @@ function bt1cl(){
 		ip4 = document.querySelector('.ip4');
 		data4 = ip4.value;
 		
-		chrome.storage.local.get('bhfyda', function (dat1){
-			passwdLength = dat1.bhfyda;
+		chrome.storage.local.get({'encrPasswd': []}, function(d2){
+			encrPasswd = d2.encrPasswd.slice();
+			
+			chrome.storage.local.get('bhfyda', function (dat1){
+				passwdLength = dat1.bhfyda;
 
-			chrome.storage.local.get('hyskal', function (data){
-				numRandomDigs = passwdLength + 1;
-				j=0;
-				u=0;
-				startRandomDigs = data.hyskal;
-				console.log(startRandomDigs);
-				for(i=startRandomDigs; i<(startRandomDigs + numRandomDigs);i++){
-					if(u == 0){
-						j += (randomDigs[i]-1);
-					}else{
-						j += randomDigs[i];
-					}
-					if(u<passwdLength){
-						charPasswd.push(encrPasswd[j]);
-						u++;
-					}
-				}
-				
-				passwd = charPasswd.join("");
-				
-				if(data1.length == 0){
-					alert("Please enter current password.!");
-				}else{
-					if(data2.length == 0){
-						alert("New password can not be empty.!");
-					}else if(data2.length < 4){
-						alert("Password should be atleast 5 characters.!");
-					}else{
-						if(data3.length == 0){
-							alert("Please re-enter the password.!");
-						}else if(!(data2 == data3)){
-							alert("Password you have entered didn't match.!");
+				chrome.storage.local.get('hyskal', function (data){
+					numRandomDigs = passwdLength + 1;
+					j=0;
+					u=0;
+					startRandomDigs = data.hyskal;
+					console.log(startRandomDigs);
+					for(i=startRandomDigs; i<(startRandomDigs + numRandomDigs);i++){
+						if(u == 0){
+							j += (randomDigs[i]-1);
 						}else{
-							if(!(data1 == passwd)){
-								alert("Old Password incorrect.!");
-								data1.value = "";
+							j += randomDigs[i];
+						}
+						if(u<passwdLength){
+							charPasswd.push(encrPasswd[j]);
+							u++;
+						}
+					}
+				
+					passwd = charPasswd.join("");
+					
+					if(data1.length == 0){
+						alert("Please enter current password.!");
+					}else{
+						if(data2.length == 0){
+							alert("New password can not be empty.!");
+						}else if(data2.length < 4){
+							alert("Password should be atleast 5 characters.!");
+						}else{
+							if(data3.length == 0){
+								alert("Please re-enter the password.!");
+							}else if(!(data2 == data3)){
+								alert("Password you have entered didn't match.!");
 							}else{
-								if(data4.length == 0){
-									flag2 = confirm("You have not entered password hint.\nHint helps you to remember password.\nAre you sure to continue without password hint?");
-								}
-				
-								if((data4.length != 0) || (flag2)){
-									console.log("Encrypting Password");
-				
-									ip1.value = ip2.value = ip3.value = ip4.value = "";
-									startRandomDigs = Math.floor((Math.random() *35) + 5);
-									numRandomDigs = data2.length + 1;
-									charPasswd = data2.split('');
-				
-									for(j=startRandomDigs;j<startRandomDigs+numRandomDigs;j++){
-										for(i=0;i<randomDigs[j];i++){
-											encrPasswd.push(randomChar());
-										}
-										if(u < data2.length){
-											encrPasswd.push(charPasswd[u]);
-											u++;
-										}
+								if(!(data1 == passwd)){
+									alert("Old Password incorrect.!");
+									data1.value = "";
+								}else{
+									if(data4.length == 0){
+										flag2 = confirm("You have not entered password hint.\nHint helps you to remember password.\nAre you sure to continue without password hint?");
 									}
+				
+									if((data4.length != 0) || (flag2)){
+										console.log("Encrypting Password");
+										u=0;
+										ip1.value = ip2.value = ip3.value = ip4.value = "";
+										startRandomDigs = Math.floor((Math.random() *35) + 5);
+										numRandomDigs = data2.length + 1;
+										passwdChar = data2.split('');
 									
-									chrome.storage.local.set({'bhfyda': data2.length});
-									chrome.storage.local.set({'encrPasswd': encrPasswd});
-									chrome.storage.local.set({'hyskal': startRandomDigs});
-									if(data4.length != 0){
-										chrome.storage.local.set({'aspire': true});
-										chrome.storage.local.set({'hint': data4});
-									}else{
-										chrome.storage.local.set({'aspire': false});
-									}
+										for(j=startRandomDigs;j<(startRandomDigs+numRandomDigs);j++){
+											for(i=1;i<randomDigs[j];i++){
+												passwdEncr.push(randomChar());
+											}
+											if(u < data2.length){
+												passwdEncr.push(passwdChar[u]);
+												u++;
+											}
+										}
 									
-									alert("Password Change successful.!");
+										chrome.storage.local.set({'bhfyda': data2.length});
+										chrome.storage.local.set({'encrPasswd': passwdEncr});
+										chrome.storage.local.set({'hyskal': startRandomDigs});
+										if(data4.length != 0){
+											chrome.storage.local.set({'aspire': true});
+											chrome.storage.local.set({'hint': data4});
+										}else{
+											chrome.storage.local.set({'aspire': false});
+										}
+									
+										alert("Password Change successful.!");
+									}	
 								}
 							}
 						}
 					}
-				}
+				});
 			});
-		});
+		});	
 	}
 }
 

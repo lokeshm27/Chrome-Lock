@@ -1,6 +1,6 @@
-var passwd;
 var incog = false;
-var hint;
+var data1,passwd,encrPasswd = [],passwdLength,i,j,u,randomDigs = [],charPasswd = [];
+var startRandomDigs,numRandomDigs;
 
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
@@ -22,12 +22,61 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 	
+	chrome.storage.local.get({'encrPasswd': []}, function(data){
+		encrPasswd = data.encrPasswd.slice();
+	});
+	
+	chrome.storage.local.get({'randomDigs': []}, function(data){
+		randomDigs = data.randomDigs.slice();
+	});
 });
 
 window.onbeforeunload = sendM;
 
 function subclick(){
-	alert("Sumbit button clicked");
+	var ip = document.querySelector('.ip');
+	data1 = ip.value;
+	
+	if(data1.length == 0){
+		alert("Password can not be empty.!");
+	}else{
+		chrome.storage.local.get('bhfyda', function (dat1){
+			passwdLength = dat1.bhfyda;
+
+			chrome.storage.local.get('hyskal', function (data){
+				numRandomDigs = passwdLength + 1;
+				j=0;
+				u=0;
+				startRandomDigs = data.hyskal;
+				for(i=startRandomDigs; i<(startRandomDigs + numRandomDigs);i++){
+					if(u == 0){
+						j += (randomDigs[i]-1);
+					}else{
+						j += randomDigs[i];
+					}
+					if(u<passwdLength){
+						charPasswd.push(encrPasswd[j]);
+						u++;
+					}
+				}
+				passwd = charPasswd.join("");
+				
+				if(data1 != passwd){
+					alert("Password incorrect.!");
+					ip.value = "";
+				}else{
+					chrome.runtime.sendMessage({method : "codeGreen", code: "248057"},
+					function(response){
+						if(response.methodReturn == 0){
+							window.close();
+						}else{
+							alert("Error - 602.\nSorry for inconvenience. Please Report the problem.!");
+						}
+					});
+				}
+			});
+		});
+	}
 }
 
 function forclick(){
@@ -51,8 +100,8 @@ function incogclk(){
 function sendM(){
 	chrome.runtime.sendMessage({method : "codeRed", code : "248057"},
 		function(response){
-			if(response.result == 0){
-				// DO Nothing
+			if(response.methodReturn == 0){
+				// Do Nothing
 			}
 		});
 		return null;
