@@ -22,6 +22,12 @@ document.addEventListener('DOMContentLoaded', function(){
 		randomDigs = data.randomDigs;
 	});
 	
+	chrome.storage.local.get('uiower', function(d){
+		if(!(d.uiower)){
+			document.querySelector('.cb1').checked = false;
+		}
+	});
+	
 	chrome.storage.local.get({'encrPasswd': []}, function(data){
 		encrPasswd = data.encrPasswd.slice();
 		if(encrPasswd.length == 0){

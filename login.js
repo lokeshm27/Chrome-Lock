@@ -10,6 +10,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 	document.querySelector('.bt1').addEventListener("click", subclick);
 	document.querySelector('.bt2').addEventListener("click", forclick);
+	chrome.storage.local.get('uiower', function(d1){
+		if(!(d1.uiower)){
+			document.querySelector('.optional').style.visibility = 'hidden';
+		}
+	});
 });
 
 window.onbeforeunload = sendM;
