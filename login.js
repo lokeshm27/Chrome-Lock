@@ -73,7 +73,7 @@ function subclick(){
 						if(response.methodReturn == 0){
 							window.close();
 						}else{
-							alert("Error - 602.\nSorry for inconvenience. Please Report the problem.!");
+							alert("Error - 602.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
 						}
 					});
 				}
