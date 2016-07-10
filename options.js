@@ -3,7 +3,7 @@ var timeOut;
 var tmSting2 = "mins of Inactivity. Minimum = 2mins. Maximum = 30mins. <br /> <strong>Note: </strong>This option is still in beta-stage. May not work perfectly.</strong>"
 var encrPasswd = [];
 var mode;
-var ip1,ip2,ip3,bt1,bt2,bt3,cb1,tm1;
+var ip1,ip2,ip3,bt1,bt2,bt3,cb1,tm1,ena;
 var randomDigs = [];
 
 document.addEventListener('DOMContentLoaded', function(){
@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function(){
 	tm1 = document.querySelector('.timeOut');
 	bt2 = document.querySelector('.ftbt1');
 	bt3 = document.querySelector('.ftbt2');
+	ena = document.querySelector('.en');
 	console.clear();
 	console.log("options.js loaded");
 	
@@ -84,7 +85,13 @@ document.addEventListener('DOMContentLoaded', function(){
 	bt1.addEventListener('click', bt1cl);
 	bt2.addEventListener('click', bt2cl);
 	bt3.addEventListener('click', bt3cl);
+	ena.addEventListener('click', enaclk)
 });
+
+function enaclk(){
+	var newURL = "chrome://extensions/?id=" + chrome.runtime.id;
+	chrome.tabs.create({ url : newURL});
+}
 
 function bt1cl(){
 	var data1,data2,passwdLength,data3,data4,u=0,j,passwd,i,chr,numRandomDigs,charPasswd = [],startRandomDigs;
