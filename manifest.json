@@ -23,7 +23,8 @@
 		"storage",
 		"notifications",
 		"activeTab",
-		"https://ajax.googleapis.com/"
+		"https://ajax.googleapis.com/",
+		"alarms"
 	],
 	
 	"background": {

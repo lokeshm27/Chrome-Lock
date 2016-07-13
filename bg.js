@@ -136,16 +136,77 @@ chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse){
 		console.log("Message recieved : " + request.method); 
 		switch(request.method){
+			
 			case "codeRed" : resp = reLockBrowser(request);
 							 break;
+							 
 			case "codeGreen" : resp = unLockBrowser(request);
 							   break;
 							   
 			case "codeYellow" : resp = lockBrowser(request);
 								break;
+								
+			case "codePurple" : resp = onPurple();
+								break;
 		}
 		sendResponse({methodReturn : resp});
 });
+
+function onPurple(){
+	alert("Dont try anything smart. Please click on \"ok\" and enter password");
+	return 0;
+}
+
+function reLockBrowser(request){
+	var flag,tabId,winId,exactPage,index;
+	exactPage = "chrome-extension://" + chrome.runtime.id + "/login.html";
+	
+	console.log("Working on closed tab");
+	
+	chrome.storage.local.get('yrueit', function (d){
+		console.log(d.yrueit);
+		if(d.yrueit){
+			console.log("Under LockDown.!");
+			tabId = request.tab.id;
+			console.log(tabId);
+			chrome.tabs.get(tabId, function (dat){
+				if(chrome.runtime.lastError){
+					// tab closed, Reopen
+					console.log("Tab closed, Re-opening.");
+					index = loginTabs.indexOf(dat);
+					loginTabs.slice(index, 1);
+					chrome.tabs.create({
+							url : loginPage,
+							pinned : true,
+							active : true,
+							windowId : request.tab.windowId,
+						}, function (t1){
+						loginTabs.push(t1);
+					});
+				}else{
+					// Tab till exists. check url
+					if(dat.url == exactPage){
+						//Page reloaded. Dont Worry.!
+						//Do nothing
+					}else{
+						index = loginTabs.indexOf(dat);
+						loginTabs.slice(index, 1);
+						chrome.tabs.remove(tabId);
+						chrome.tabs.create({
+								url : loginPage,
+								pinned : true,
+								active : true,
+								windowId : dat.windowId,
+							}, function (t1){
+							loginTabs.push(t1);
+						});
+					}
+				}
+			});
+		}
+	});
+	return 0;
+}
 
 	
 function lockBrowser(request){
@@ -166,7 +227,7 @@ function lockBrowser(request){
 								if(lockedWins.indexOf(winArray[i].Id) == -1){
 									chrome.tabs.create({
 										url : loginPage,
-										pinned : false,
+										pinned : true,
 										active : true,
 										windowId : winArray[i].Id,
 									}, function (tab){
@@ -193,7 +254,7 @@ function lockNewWindow(win){
 					if(lockedWins.indexOf(win.Id) == -1){
 						chrome.tabs.create({
 							url : loginPage,
-							pinned : false,
+							pinned : true,
 							active : true,
 							windowId : win.Id,
 						}, function (tab){
@@ -209,7 +270,7 @@ function lockNewWindow(win){
 
 function unLockBrowser(request){
 	var tabs = loginTabs;
-	loginTabs = null;
+	loginTabs = [];
 	for(i=0; i < tabs.length; i++){
 		chrome.tabs.remove(tabs[i].id);
 	}

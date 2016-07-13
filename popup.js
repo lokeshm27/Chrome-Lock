@@ -3,7 +3,6 @@ var Ele1,Ele2,Ele3,Ele4,Ele5;
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("popup.js loaded");
-	console.log(chrome.runtime.id);
 	
 	Ele1 = document.querySelector('.op1');
 	Ele1.addEventListener("mouseover", op1msov);

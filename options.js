@@ -3,7 +3,7 @@ var timeOut;
 var tmSting2 = "mins of Inactivity. Minimum = 2mins. Maximum = 30mins. <br /> <strong>Note: </strong>This option is still in beta-stage. May not work perfectly.</strong>"
 var encrPasswd = [];
 var mode;
-var ip1,ip2,ip3,bt1,bt2,bt3,cb1,tm1,ena;
+var ip1,ip2,ip3,bt1,bt2,bt3,cb1,cb2,tm1,ena;
 var randomDigs = [];
 
 document.addEventListener('DOMContentLoaded', function(){
@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function(){
 	ip3 = document.querySelector('.ip3');
 	bt1 = document.querySelector('.bt1');
 	cb1 = document.querySelector('.cb1');
+	cb2 = document.querySelector('.cb2');
 	tm1 = document.querySelector('.timeOut');
 	bt2 = document.querySelector('.ftbt1');
 	bt3 = document.querySelector('.ftbt2');
@@ -29,6 +30,12 @@ document.addEventListener('DOMContentLoaded', function(){
 		}
 	});
 	
+	chrome.storage.local.get('tyudfg', function (d1){
+		if(!(d1.tyudfg)){
+			cb2.checked = false;
+		}
+	});
+	
 	chrome.storage.local.get({'encrPasswd': []}, function(data){
 		encrPasswd = data.encrPasswd.slice();
 		if(encrPasswd.length == 0){
@@ -43,8 +50,8 @@ document.addEventListener('DOMContentLoaded', function(){
 		}else{
 			mode="change";
 			console.log("Change password mode");
-			document.querySelector('.magicbox').style.visibility = 'hidden';
-			document.querySelector('.p4').innerHTML = "Enter Password Hint : ";
+			document.querySelector('.magicbox').style.visibility = 'visible';
+			document.querySelector('.p4').innerHTML = "Enter Password Hint <strong class=\"inRed\">*</strong> : ";
 			document.querySelector('.div1').innerHTML = "<input class=\"ip4\" type=\"text\"></input>";
 			document.querySelector('.ip4').addEventListener("keypress", function(e){
 				if(e.keyCode == 13){
@@ -247,7 +254,7 @@ function bt1cl(){
 }
 
 function bt2cl(){
-	var data1,data2,data3,data4,flag1,data5,flag0;
+	var data1,data2,data3,data4,flag1,flag2,data5,flag0;
 	
 	flag0 = confirm("Are you sure to save changes ?");
 	
@@ -256,6 +263,7 @@ function bt2cl(){
 		data2 = document.querySelector('.ip2').value;
 		data3 = document.querySelector('.ip3').value;
 		flag1 = document.querySelector('.cb1').checked;
+		flag2 = document.querySelector('.cb2').checked;
 		data5 = document.querySelector('.timeOut').value;
 	
 		if(mode == "set"){
@@ -275,6 +283,7 @@ function bt2cl(){
 		}else{
 			chrome.storage.local.set({'uiower': flag1});
 			chrome.storage.local.set({'pporte': data5});
+			chrome.storage.local.set({'tyudfg': flag2});
 			alert("Changes saved successfully.!");
 			window.close();
 		}
