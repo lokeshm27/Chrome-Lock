@@ -13,6 +13,7 @@ var encrPasswd;
 var pfl = false;
 var winArr;
 var numWhites = 0;
+var atConfirm = false;
 
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
@@ -84,6 +85,7 @@ function randomChar(){
 chrome.windows.onCreated.addListener(function(win) {
 	chrome.windows.getAll(function(winArr){
 		if(winArr.length == 1){
+			chrome.storage.locat.set({'yrueit' : false});
 			chrome.storage.local.get('hutoia', function(data){
 				if(data.hutoia==undefined){
 					//set hutoia key
@@ -161,6 +163,7 @@ function onWhite(request, sender){
 }
 
 function onLock(){
+	atConfirm = true;
 	var f1 = false;
 	var str = "Chrome Lock has locked your Browser.\n\nClick \"Ok\" and enter password to unlock your Browser.\nOR click \"Cancel\" to close browser.";
 	for(i=0; i<loginTabs.length; i++){
@@ -179,15 +182,17 @@ function onLock(){
 		if(f1){
 			for(i=0; i<loginTabs.length; i++){
 				chrome.tabs.sendMessage(loginTabs[i].id, {method : "codeBlack", code : "248057"}, function(response){
-					if(response.methodReturn != 0){
+					/* if(response.methodReturn != 0){
 						alert("Error - 611.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
-					}
+					} */
 				});
 			}
 		}else{
 			ultraRed();
 		}
 	});
+	
+	atConfirm = false;
 	
 }
 
@@ -307,6 +312,13 @@ function lockNewWindow(win){
 						}, function (tab){
 							loginTabs.push(tab);
 							lockedWins.push(tab.windowId);
+							if(atConfirm){
+								chrome.tabs.sendMessage(tab.id, {method : "codeWhite", code : "248057"}, function(response){
+									if(response.methodReturn != 0){
+										alert("Error - 611.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+									}
+								});
+							}
 						});
 					}
 				}
@@ -318,6 +330,7 @@ function lockNewWindow(win){
 function unLockBrowser(request){
 	var tabs = loginTabs;
 	loginTabs = [];
+	lockedWins = [];
 	for(i=0; i < tabs.length; i++){
 		chrome.tabs.remove(tabs[i].id);
 	}
