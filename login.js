@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("login.js loaded");
 	
+	chrome.storage.local.get('hutoia', function (d){
+		if(d.hutoia){
+			veryImpFlag = true;
+			window.close();
+		}
+	});
+	
 	body = document.querySelector('.bd');
 	ele = document.querySelector('.ip');
 	document.querySelector('.bt1').addEventListener("click", subclick);

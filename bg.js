@@ -264,6 +264,7 @@ function reLockBrowser(request){
 function lockBrowser(request){
 	console.log("Working on it.");
 	
+	chrome.storage.local.set({'hutoia' : false});
 	if(request.code != "248057" ){
 		prompt("Error code : 601.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
 		return -1;
