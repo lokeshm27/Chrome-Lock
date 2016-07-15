@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelector('.bt3').addEventListener("click", latclick);
 	document.querySelector('.incog').addEventListener("click", incogclk);
 	
+	ele.focus();
 	ele.addEventListener("keypress", function(e){
 		if(e.keyCode == 13){
 			subclick();
@@ -46,36 +47,28 @@ document.addEventListener('DOMContentLoaded', function () {
 		adp = d.tyudfg;
 	});
 	
-	onLoad();
+	chrome.windows.getCurrent(function(w){
+		win = w;
+	});
 });
 
 window.onbeforeunload = sendM;
 
-function onLoad(){
-	body.style.visibility = 'hidden';
-	notImpFlag = confirm("Chrome Lock has locked this window.!\n\nClick \"ok\" and enter password to unlock.\nClick \"cancel\" to close ALL windows.");
-	if(notImpFlag){
-		unlockHandler();
-	}else{
-		exit();
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+	var resp;
+	console.log("Message recieved : " + request.method);
+	switch(request.method){
+		case "codeBlack" : resp = onBlack(request);
+						    break;
+							
+		case "codeWhite"  : resp = onWhite(request);
+							break;
 	}
-}
+	sendResponse({methodReturn : resp});
+});
 
-function latclick(){
-	if(adp){
-		chrome.alarms.clearAll(function(fl){
-			chrome.windows.update(win.id, {state: 'maximized'});
-			if(!fl){
-				alert("Error - 604.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
-			}
-		});
-	}
-	onLoad();
-}
-
-function unlockHandler(){
-	chrome.windows.getCurrent(function(w){
-		win = w;
+function onBlack(request){
+	if(request.code == "248057"){
 		body.style.visibility = 'visible';
 		ele.focus();
 		if(adp){
@@ -87,17 +80,35 @@ function unlockHandler(){
 				}
 			});
 		}
-	});
+	}else{
+		alert("Error - 604.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+	}
+	
+	return 0;
 }
 
-function exit(){
-	chrome.runtime.sendMessage({method : "codeUltraRed", code : "248057"}, function(response){
-		if(response.methodReturn == 0){
-			veryImpFlag = true;
-			window.close();
-		}else{
-			alert("Error - 603.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
-			window.close();
+function onWhite(request){
+	if(request.code == "248057"){
+		body.style.visibility = 'hidden';
+		if(adp){
+			chrome.alarms.clear("checkMax", function(fl){
+				chrome.windows.update(win.id, {state: 'maximized'});
+				if(!fl){
+					alert("Error - 604.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+				}
+			});
+		}
+	}else{
+		alert("Error - 604.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+	}
+	
+	return 0;
+}
+
+function latclick(){
+	chrome.runtime.sendMessage({method : "codeWhite", code : "248057"}, function(response){
+		if(response.methodReturn != 0){
+			alert("Error - 609.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
 		}
 	});
 }
@@ -147,7 +158,7 @@ function subclick(){
 					chrome.runtime.sendMessage({method : "codeGreen", code: "248057"},
 					function(response){
 						if(response.methodReturn == 0){
-							window.close();
+							//window.close();
 						}else{
 							alert("Error - 602.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
 						}

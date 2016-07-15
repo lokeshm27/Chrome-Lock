@@ -12,6 +12,7 @@ var i;
 var encrPasswd;
 var pfl = false;
 var winArr;
+var numWhites = 0;
 
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
@@ -50,12 +51,6 @@ window.onbeforeunload = function(){
 }
 
 chrome.runtime.onInstalled.addListener(function (details){
-	var flag = false;
-	flag = confirm("Thanks for Choosing Chrome Lock v1.0\n\nPlease take a moment and allow this extension in incognito mode for better performance.!\nWould you like to enable it now?");
-	if(flag){
-		var newURL = "chrome://extensions/?id=" + chrome.runtime.id;
-		chrome.tabs.create({url : newURL});
-	}
 	chrome.storage.local.get({'randomDigs': []}, function (data){
 		if(data.randomDigs.length==0){
 			console.log("Generating random Numbers.!");
@@ -77,6 +72,8 @@ chrome.runtime.onInstalled.addListener(function (details){
 			});
 		}
 	});
+	
+	chrome.storage.local.set({'yrueit': false});
 });
 
 function randomChar(){
@@ -101,6 +98,7 @@ chrome.windows.onCreated.addListener(function(win) {
 					});
 				}else if(data.hutoia==false){
 					console.log("Locking");
+					chrome.storage.local.set({'yrueit': false});
 					lockBrowser({'method': "codeRed", 'code': "248057"});
 				}else{
 					//timeoutHandler();
@@ -146,25 +144,71 @@ chrome.runtime.onMessage.addListener(
 			case "codeYellow" : resp = lockBrowser(request);
 								break;
 								
-			case "codePurple" : resp = onPurple();
-								break;
+			case "codeWhite" : resp = onWhite(request, sender);
+							   break;
 		}
 		sendResponse({methodReturn : resp});
 });
 
-function onPurple(){
-	alert("Dont try anything smart. Please click on \"ok\" and enter password");
+function onWhite(request, sender){
+	if(request.code = "248057"){
+		onLock();
+	}else{
+		alert("Error - 607.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+	}
+	
+	return 0;
+}
+
+function onLock(){
+	var f1 = false;
+	var str = "Chrome Lock has locked your Browser.\n\nClick \"Ok\" and enter password to unlock your Browser.\nOR click \"Cancel\" to close browser.";
+	for(i=0; i<loginTabs.length; i++){
+		chrome.tabs.sendMessage(loginTabs[i].id, {method : "codeWhite", code : "248057"}, function(response){
+			if(response.methodReturn != 0){
+				alert("Error - 610.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+			}
+		});
+	}
+	chrome.storage.local.get('uiower', function(d){
+		if(d.uiower){
+			str += "\n\nYou can use incognito window by Clicking : \n Ok -> Open incognito window.";
+		}
+		
+		f1 = confirm(str);
+		if(f1){
+			for(i=0; i<loginTabs.length; i++){
+				chrome.tabs.sendMessage(loginTabs[i].id, {method : "codeBlack", code : "248057"}, function(response){
+					if(response.methodReturn != 0){
+						alert("Error - 611.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+					}
+				});
+			}
+		}else{
+			ultraRed();
+		}
+	});
+	
+}
+
+function ultraRed(){
+	numWhites = 0;
+	chrome.windows.getAll(function(arr){
+		if(!arr.length == 0){
+			for(i=0; i<arr.length; i++){
+				chrome.windows.remove(arr[i].id);
+			}
+		}
+	});
 	return 0;
 }
 
 function reLockBrowser(request){
 	var flag,tabId,winId,exactPage,index;
 	exactPage = "chrome-extension://" + chrome.runtime.id + "/login.html";
-	
 	console.log("Working on closed tab");
 	
 	chrome.storage.local.get('yrueit', function (d){
-		console.log(d.yrueit);
 		if(d.yrueit){
 			console.log("Under LockDown.!");
 			tabId = request.tab.id;
@@ -179,9 +223,9 @@ function reLockBrowser(request){
 							url : loginPage,
 							pinned : true,
 							active : true,
-							windowId : request.tab.windowId,
+							windowId : request.tab.windowId
 						}, function (t1){
-						loginTabs.push(t1);
+							loginTabs.push(t1);
 					});
 				}else{
 					// Tab till exists. check url
@@ -196,9 +240,9 @@ function reLockBrowser(request){
 								url : loginPage,
 								pinned : true,
 								active : true,
-								windowId : dat.windowId,
+								windowId : dat.windowId
 							}, function (t1){
-							loginTabs.push(t1);
+								loginTabs.push(t1);
 						});
 					}
 				}
@@ -221,15 +265,17 @@ function lockBrowser(request){
 				//Already under lockdown,
 			}else{
 				chrome.windows.getAll(function(winArray){
+					console.log(winArray);
 					for(i = 0; i < winArray.length; i++){
 						if(winArray[i].type == "normal"){
 							if(!winArray[i].incognito){
-								if(lockedWins.indexOf(winArray[i].Id) == -1){
+								if(lockedWins.indexOf(winArray[i].id) == -1){
 									chrome.tabs.create({
 										url : loginPage,
 										pinned : true,
 										active : true,
-										windowId : winArray[i].Id,
+										windowId : winArray[i].id,
+										index : 0
 									}, function (tab){
 										loginTabs.push(tab);
 										lockedWins.push(tab.windowId);
@@ -239,6 +285,7 @@ function lockBrowser(request){
 						}
 					}
 					chrome.storage.local.set({'yrueit': true});
+					onLock();
 				});
 			}
 		});
@@ -256,10 +303,10 @@ function lockNewWindow(win){
 							url : loginPage,
 							pinned : true,
 							active : true,
-							windowId : win.Id,
+							windowId : win.id
 						}, function (tab){
 							loginTabs.push(tab);
-							lockedWins.push(tab.windowInfo.id);
+							lockedWins.push(tab.windowId);
 						});
 					}
 				}
@@ -300,6 +347,7 @@ chrome.windows.onFocusChanged.addListener(function (windowId) {
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
     lastActive = new Date();
+	
 	if (loginTabs != null) {
 		for(i = 0; i < loginTabs.length; i++) {
 			if(activeInfo.tabId == loginTabs[i].id) {

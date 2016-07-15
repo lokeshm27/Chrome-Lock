@@ -5,6 +5,8 @@ var encrPasswd = [];
 var mode;
 var ip1,ip2,ip3,bt1,bt2,bt3,cb1,cb2,tm1,ena;
 var randomDigs = [];
+var passwdChanged = false;
+var changesSaved = false;
 
 document.addEventListener('DOMContentLoaded', function(){
 	ip1 = document.querySelector('.ip1');
@@ -92,7 +94,8 @@ document.addEventListener('DOMContentLoaded', function(){
 	bt1.addEventListener('click', bt1cl);
 	bt2.addEventListener('click', bt2cl);
 	bt3.addEventListener('click', bt3cl);
-	ena.addEventListener('click', enaclk)
+	ena.addEventListener('click', enaclk);
+	
 });
 
 function enaclk(){
@@ -129,6 +132,7 @@ function bt1cl(){
 				}
 			
 				if((data3.length != 0) || (flag)){
+					passwdChanged = true;
 					console.log("Encrypting Password");
 				
 					ip1.value = ip2.value = ip3.value = "";
@@ -214,6 +218,8 @@ function bt1cl(){
 									}
 				
 									if((data4.length != 0) || (flag2)){
+										passwdChanged = true;
+										
 										console.log("Encrypting Password");
 										u=0;
 										ip1.value = ip2.value = ip3.value = ip4.value = "";
@@ -281,6 +287,7 @@ function bt2cl(){
 			alert("Inactivity timeout should greater than 2mins and less than 30mins.!");
 			document.querySelector('.timeOut').value = 5;
 		}else{
+			changesSaved = true;
 			chrome.storage.local.set({'uiower': flag1});
 			chrome.storage.local.set({'pporte': data5});
 			chrome.storage.local.set({'tyudfg': flag2});
