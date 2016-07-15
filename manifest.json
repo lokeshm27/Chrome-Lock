@@ -21,10 +21,9 @@
 	"permissions": [
 		"tabs",
 		"storage",
-		"notifications",
 		"activeTab",
-		"https://ajax.googleapis.com/",
-		"alarms"
+		"alarms",
+		"contextMenus"
 	],
 	
 	"background": {

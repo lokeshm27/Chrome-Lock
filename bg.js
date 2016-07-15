@@ -234,20 +234,23 @@ function reLockBrowser(request){
 					});
 				}else{
 					// Tab till exists. check url
+					console.log("Tab still exists, Checking URL");
 					if(dat.url == exactPage){
+						console.log("Same URL, Page reloaded.!");
 						//Page reloaded. Dont Worry.!
 						//Do nothing
 					}else{
+						console.log("URL changed.");
 						index = loginTabs.indexOf(dat);
 						loginTabs.slice(index, 1);
-						chrome.tabs.remove(tabId);
-						chrome.tabs.create({
+						//chrome.tabs.remove(tabId);
+						chrome.tabs.update({
 								url : loginPage,
 								pinned : true,
 								active : true,
-								windowId : dat.windowId
+								//windowId : dat.windowId
 							}, function (t1){
-								loginTabs.push(t1);
+								//loginTabs.push(t1);
 						});
 					}
 				}
@@ -332,7 +335,11 @@ function unLockBrowser(request){
 	loginTabs = [];
 	lockedWins = [];
 	for(i=0; i < tabs.length; i++){
-		chrome.tabs.remove(tabs[i].id);
+		chrome.tabs.remove(tabs[i].id, function (info){
+			if(chrome.runtime.lastError){
+				
+			}
+		});
 	}
 	
 	chrome.storage.local.set({'hutoia': true});
@@ -379,3 +386,12 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 		}         
 	}
 });
+
+function contextClick(info, tab){
+	lockBrowser({code : "248057"});
+}
+
+chrome.contextMenus.create({
+	"title" : "Lock Now.",
+    "contexts" : ["all"],
+	"onclick" : contextClick });
