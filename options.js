@@ -283,8 +283,8 @@ function bt2cl(){
 			}
 		}
 	
-		if((data5 < 2) || (data5 > 30)){
-			alert("Inactivity timeout should greater than 2mins and less than 30mins.!");
+		if((data5 < 2) || (data5 > 30) || (Math.round(data5) != data5)){
+			alert("Inactivity timeout should be a Integer (Decimal points not allowed.!) greater than 2mins and less than 30mins.!");
 			document.querySelector('.timeOut').value = 5;
 		}else{
 			changesSaved = true;

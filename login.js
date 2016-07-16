@@ -9,6 +9,7 @@ var body,win;
 var adp = false;
 var notImpFlag = false;
 var ele;
+var alarmSet = false;
 
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
@@ -52,16 +53,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 	chrome.storage.local.get('tyudfg', function (d){
 		adp = d.tyudfg;
+		console.log(adp);
 	});
 	
 	chrome.windows.getCurrent(function(w){
 		win = w;
 	});
-});
-
-window.onbeforeunload = sendM;
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+	
+	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	var resp;
 	console.log("Message recieved : " + request.method);
 	switch(request.method){
@@ -73,12 +72,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	}
 	sendResponse({methodReturn : resp});
 });
+});
+
+window.onbeforeunload = sendM;
 
 function onBlack(request){
+	console.log("Black");
 	if(request.code == "248057"){
 		body.style.visibility = 'visible';
 		ele.focus();
+		
 		if(adp){
+			alarmSet = true;
 			chrome.windows.update(win.id, {state: 'fullscreen'});
 			chrome.alarms.create("checkMax", {when: Date.now() + 100, periodInMinutes: 0.00166667});
 			chrome.alarms.onAlarm.addListener(function(alarm){
@@ -95,15 +100,18 @@ function onBlack(request){
 }
 
 function onWhite(request){
+	console.log("White");
 	if(request.code == "248057"){
 		body.style.visibility = 'hidden';
 		if(adp){
+			if(alarmSet){
 			chrome.alarms.clear("checkMax", function(fl){
-				chrome.windows.update(win.id, {state: 'maximized'});
-				if(!fl){
-					alert("Error - 604.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
-				}
-			});
+					chrome.windows.update(win.id, {state: 'maximized'});
+					if(!fl){
+						alert("Error - 604.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+					}
+				});
+			}
 		}
 	}else{
 		alert("Error - 604.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");

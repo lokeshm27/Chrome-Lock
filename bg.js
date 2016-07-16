@@ -8,7 +8,7 @@ var lockedWins = [];
 var hutoia;
 var optionsPage = "options.html";
 var randomDigs = [];
-var i;
+var i,j;
 var encrPasswd;
 var pfl = false;
 var winArr;
@@ -19,27 +19,25 @@ document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("Chrome Locker is in Action");
 	chrome.storage.local.get('hutoia', function(data){
-		hutoia = data.hutoia;
-	});
-	switch(hutoia){
-		case undefined :    //check if password is set, If yes, Lock browser.
-							console.log("Case : Undefined.")
-							chrome.storage.local.get({'encrPasswd' : []}, function (data){
-								if(!(data.encrPasswd.length == 0)){
-									console.log("Locking Browser.!");
-									lockBrowser({'method': "codeRed", 'code': "248057"});
-									chrome.storage.local.set({'hutoia' : false});
-								}
-							});
-							break;
+		switch(data.hutoia){
+			case undefined :    //check if password is set, If yes, Lock browser.
+								console.log("Case : Undefined.")
+								chrome.storage.local.get({'encrPasswd' : []}, function (data){
+									if(!(data.encrPasswd.length == 0)){
+										console.log("Locking Browser.!");
+										lockBrowser({'method': "codeRed", 'code': "248057"});
+										chrome.storage.local.set({'hutoia' : false});
+									}
+								});
+								break;
 							
-		case false :  	console.log("Case: flase\nLocking..");
-						lockBrowser({'method': "codeRed", 'code': "248057"});
-						break;
+			case false :  	console.log("Case: flase\nLocking..");
+							lockBrowser({'method': "codeRed", 'code': "248057"});
+							break;
 						
-		case true : console.log("case : true"); 
-					//timeoutHandler();
-	}
+			case true : console.log("case : true"); 
+		}
+	});
 });
 
 window.onbeforeunload = function(){
@@ -53,7 +51,7 @@ window.onbeforeunload = function(){
 
 chrome.runtime.onInstalled.addListener(function (details){
 	chrome.storage.local.get({'randomDigs': []}, function (data){
-		if(data.randomDigs.length==0){
+		if(data.randomDigs.length == 0){
 			console.log("Generating random Numbers.!");
 			for(i=0;i<=50;i++){
 				num = Math.floor((Math.random() * 3 ) + 1); 
@@ -87,7 +85,7 @@ chrome.windows.onCreated.addListener(function(win) {
 		if(winArr.length == 1){
 			chrome.storage.locat.set({'yrueit' : false});
 			chrome.storage.local.get('hutoia', function(data){
-				if(data.hutoia==undefined){
+				if(data.hutoia == undefined){
 					//set hutoia key
 					chrome.storage.local.set({'hutoia' : false});
 		
@@ -98,7 +96,7 @@ chrome.windows.onCreated.addListener(function(win) {
 							lockBrowser({'method': "codeRed", 'code': "248057"});
 						}
 					});
-				}else if(data.hutoia==false){
+				}else if(data.hutoia == false){
 					console.log("Locking");
 					chrome.storage.local.set({'yrueit': false});
 					lockBrowser({'method': "codeRed", 'code': "248057"});
@@ -259,14 +257,13 @@ function reLockBrowser(request){
 	});
 	return 0;
 }
-
 	
 function lockBrowser(request){
 	console.log("Working on it.");
 	
 	chrome.storage.local.set({'hutoia' : false});
 	if(request.code != "248057" ){
-		prompt("Error code : 601.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+		alert("Error code : 601.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
 		return -1;
 	}else{
 		chrome.storage.local.get('yrueit', function(d){
@@ -274,7 +271,6 @@ function lockBrowser(request){
 				//Already under lockdown,
 			}else{
 				chrome.windows.getAll(function(winArray){
-					console.log(winArray);
 					for(i = 0; i < winArray.length; i++){
 						if(winArray[i].type == "normal"){
 							if(!winArray[i].incognito){
@@ -294,7 +290,7 @@ function lockBrowser(request){
 						}
 					}
 					chrome.storage.local.set({'yrueit': true});
-					onLock();
+					setTimeout(onLock, 500);
 				});
 			}
 		});
@@ -354,9 +350,13 @@ chrome.windows.onFocusChanged.addListener(function (windowId) {
 			if(d.yrueit){
 				chrome.storage.local.get('uiower', function(d1){
 					if(!(d1.uiower)){
-						chrome.windows.get(windowId, function (win) {
-							if (win.incognito) {
-								chrome.windows.update(win.id, { state : "minimized" } );
+						chrome.windows.get(windowId, function (w) {
+							if (w.incognito) {
+								chrome.windows.update(w.id,{state: "minimized"}, function (t){
+									if(chrome.runtime.lastError){
+										alert("Error - 612.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+									}
+								});
 							}
 						});
 					}
@@ -391,8 +391,26 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 function contextClick(info, tab){
 	lockBrowser({code : "248057"});
 }
+chrome.storage.local.get('pporte', function (d){
+	chrome.idle.setDetectionInterval(d.pporte * 60);
+});
+
+chrome.idle.onStateChanged.addListener(function (newState){
+	console.log("StateChanged = " + newState);
+	switch(newState){
+		case "locked" : lockBrowser({code : "248057"});
+						break;
+		case "idle" : idleStateHandler();
+					  break;
+		case "active" : //do Nothing.!
+	}
+});
+
+function idleStateHandler(){
+	lockBrowser({code : "248057"});
+}
 
 chrome.contextMenus.create({
-	"title" : "Lock Now.",
+	"title" : "Lock Now",
     "contexts" : ["all"],
 	"onclick" : contextClick });
