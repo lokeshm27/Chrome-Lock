@@ -4,8 +4,7 @@
 * Lock at inactivity or when you open your browser.
 * Choose to lock incognito window or to allow it.
 * With options page with change password and other options
-* Advanced protection makes it almost impossible to bypass the extension's Lock
-
+* Advanced protection makes it very hard to bypass the extension's Lock
 ### Note : Some features still in the beta stage, may not work perfectly
 
 ## Add to your chrome now :
