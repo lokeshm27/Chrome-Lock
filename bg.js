@@ -83,7 +83,8 @@ function randomChar(){
 chrome.windows.onCreated.addListener(function(win) {
 	chrome.windows.getAll(function(winArr){
 		if(winArr.length == 1){
-			chrome.storage.locat.set({'yrueit' : false});
+			console.log("Only one window. Locking");
+			chrome.storage.local.set({'yrueit' : false});
 			chrome.storage.local.get('hutoia', function(data){
 				if(data.hutoia == undefined){
 					//set hutoia key
@@ -101,7 +102,10 @@ chrome.windows.onCreated.addListener(function(win) {
 					chrome.storage.local.set({'yrueit': false});
 					lockBrowser({'method': "codeRed", 'code': "248057"});
 				}else{
-					//timeoutHandler();
+					console.log("Locking");
+					chrome.storage.local.set({'yrueit': false});
+					chrome.storage.local.set({'hutoia': false});
+					lockBrowser({'method': "codeRed", 'code': "248057"});
 				}
 			});
 		}else{

@@ -83,6 +83,11 @@ function op3msot(){
 }
 
 function op3mscl(){
+	chrome.tabs.create({
+		url: "http://www.chromelock.comxa.com/contact.php",
+		active: true,
+		pinned: false
+	});
 	window.close();
 }
 
@@ -96,6 +101,11 @@ function op4msot(){
 }
 
 function op4mscl(){
+	chrome.tabs.create({
+		url: "about.html",
+		active: true,
+		pinned: false
+	});
 	window.close();
 }
 
