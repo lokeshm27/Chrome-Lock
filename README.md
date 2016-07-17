@@ -15,5 +15,5 @@
 * Click on "Load unpacked extension" and select the extracted folder and you are good to go.
 
 If you have any problems/suggestions, Let me know.
-email : lockerteam16@gmail.com
-web: www.chromelock.comxa.com/contact.php
+* email : lockerteam16@gmail.com
+* web: www.chromelock.comxa.com/contact.php
