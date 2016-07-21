@@ -450,7 +450,7 @@ chrome.runtime.onMessage.addListener(
 							 break;
 							 
 			case "codeGreen" : resp = unLockBrowser(request);
-							   break;
+							    break;
 							   
 			case "codeYellow" : resp = lockBrowser(request);
 								break;
@@ -466,9 +466,7 @@ chrome.runtime.onMessage.addListener(
 
 function validateTab(request){
 	if(request.code == "248057"){
-		console.log("Code correct.");
 		if(loginTabs == null){
-			console.log(loginTabs);
 			return false;
 		}else{
 			for(i = 0; i < loginTabs.length; i++){
@@ -662,21 +660,42 @@ function lockNewWindow(win){
 }
 
 function unLockBrowser(request){
-	var tabs = loginTabs;
-	loginTabs = [];
-	lockedWins = [];
-	for(i=0; i < tabs.length; i++){
-		chrome.tabs.remove(tabs[i].id, function (info){
-			if(chrome.runtime.lastError){
+	if(unLockBrowser.caller != null){
+		if(request.code != "248057"){
+			var tabs = loginTabs;
+			loginTabs = [];
+			lockedWins = [];
+			for(i=0; i < tabs.length; i++){
+				chrome.tabs.remove(tabs[i].id, function (info){
+					if(chrome.runtime.lastError){
 				
+					}
+				});
 			}
-		});
-	}
 	
-	chrome.storage.local.set({'hutoia': true});
-	chrome.storage.local.set({'yrueit': false});
-	return 0;
+			chrome.storage.local.set({'hutoia': true});
+			chrome.storage.local.set({'yrueit': false});
+			return 0;
+		}else{
+			console.log("Error - 614.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+		}
+	}else{
+		setTimeout(smartGuy, 3000);
+		alert("You are smart, But not smart enough.!\nDon't forget to check the console.!");
+		return "Want to work for me?";
+	}
 }
+
+function smartGuy(){
+	chrome.windows.getAll(function(arr){
+		if(!arr.length == 0){
+			for(i=0; i<arr.length; i++){
+				chrome.windows.remove(arr[i].id);
+			}
+		}
+	});
+}
+
 
 chrome.windows.onFocusChanged.addListener(function (windowId) {
 	if(windowId != -1){
