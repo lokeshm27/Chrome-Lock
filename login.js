@@ -15,13 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("login.js loaded");
 	
-	chrome.storage.local.get('hutoia', function (d){
-		if(d.hutoia){
-			veryImpFlag = true;
-			window.close();
-		}
-	});
-	
+	validate();
 	body = document.querySelector('.bd');
 	ele = document.querySelector('.ip');
 	document.querySelector('.bt1').addEventListener("click", subclick);
@@ -76,6 +70,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 window.onbeforeunload = sendM;
 
+function validate(){
+	chrome.tabs.getCurrent(function(tab){
+		chrome.runtime.sendMessage({method : "validate", code : "248057", tabId : tab.id}, function(resp){
+			if(resp.methodReturn == false){
+				window.close();
+			}else{
+				console.log("Tab Validated successfully.");
+			}
+		});
+	});
+}
+
 function onBlack(request){
 	console.log("Black");
 	if(request.code == "248057"){
@@ -128,12 +134,48 @@ function latclick(){
 	});
 }
 
+function shake(e, oncomplete, distance, time) {
+    if (typeof e === "string") e = document.getElementById(e);
+    if (!time) time = 500;
+    if (!distance) distance = 5;
+
+    var originalStyle = e.style.cssText;
+    e.style.position = "relative";
+    var start = (new Date()).getTime();
+    animate();
+
+    function animate() {
+        var now = (new Date()).getTime();
+        var elapsed = now-start;
+        var fraction = elapsed/time;
+        
+        if (fraction < 1) {
+            var x = distance * Math.sin(fraction*4*Math.PI);
+            e.style.left = x + "px";
+            setTimeout(animate, Math.min(25, time-elapsed));
+        }
+        else {
+            e.style.cssText = originalStyle
+            if (oncomplete) oncomplete(e);
+        }
+    }
+}
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
+
 function subclick(){
 	var ip = document.querySelector('.ip');
 	data1 = ip.value;
 	
 	if(data1.length == 0){
+		ip.style.borderColor = "#FF3333";
+		ip.style.boxShadow = "0 0 7px #FF3333";
 		alert("Password can not be empty.!");
+		shake(ip);
+		ele.focus();
 	}else{
 		chrome.storage.local.get('bhfyda', function (dat1){
 			passwdLength = dat1.bhfyda;

@@ -29,12 +29,61 @@
 				font-size: 14px;
 				margin-left: 25px;
 			}
-			button{
-				margin: 10px;
+			
+			#button{
+				font-weight: 900;
+				margin: 20px;
+				font-size: 18px;
+				color: #FFFFFF;
+				border-radius: 5px;
+				height: 30px;
+				line-height: 30px;
+				background-color: #5590FF;
+				border-color: #4672B9;
 			}
+			
+			#button:hover{
+				cursor: default;
+				background-color: #3C7BED;
+				border-color: #365DAA;
+			}
+			
+			#buttonLayout1{
+				width: 50%;
+				float: left;
+			}
+			
+			#buttonLayout2{
+				width: 50%;
+				float: right;
+			}
+			
 			input{
-				margin-left: 25px;
-				margin-bottom: 20px;
+				border-style: solid;
+				height: 20px;
+				line-height: 25px;
+				width: 300px;
+				margin-left: 40px;
+				box-shadow: 0 0 7px #4db8ff;
+				border-color: #4db8ff;
+			}
+			
+			input:focus {
+				outline-width: 0;
+			}
+			
+			.bt1{
+				width: 90px;
+				float: right;
+			}
+			
+			.bt2{
+				width: 130px;
+				float: left;
+			}
+			
+			.bt3{
+				width: 160px;
 			}
 		</style>
 	</head>
@@ -53,13 +102,17 @@
 			<center>
 				<p><strong>Enter your Password : </strong></p>
 				<input type="password" class="ip"></input><br />
-				<button class="bt1">Unlock</button>
-				<button class="bt2">Forgot Password</button><br />
+				<div id="buttonLayout1">
+					<div id="button" class="bt1">Unlock</div>
+				</div>
+				<div id="buttonLayout2">
+					<div id="button" class="bt2">Forgot Password</div><br />
+				</div>
 				<p><strong> OR </strong></p>
 			</center>
 			<p>You can enter password later by clicking below button to go display of message. <strong>Highly recomended if Advanced protection is enabled.</strong></p>
 			<center>
-				<button class="bt3">Unlock Later</button>
+				<div id="button" class="bt3">Unlock Later</div>
 			</center>
 		</div>
 	</body>

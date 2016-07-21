@@ -14,10 +14,160 @@ var pfl = false;
 var winArr;
 var numWhites = 0;
 var atConfirm = false;
+var sitels = [];
+var enaTM = true;
+var exception = false,checkURL = false,currentOnly = true,lockOnIdle = true;
+var DND = false;
+var disabled = false
 
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("Chrome Locker is in Action");
+	
+	chrome.browserAction.setBadgeBackgroundColor({"color": "#FF0000"});
+	
+	chrome.storage.local.get('bnmjkl', function(dd){
+		if(dd.bnmjkl){
+			enaTM = true;
+			chrome.storage.local.get({'sitels': []}, function (data){
+				if(data.seitels == undefined){
+					sitels = ["youtube.com", "netflix.com", "vimeo.com"];
+					chrome.storage.local.set({'sitels' : sitels});
+				}else{
+					if(data.sitels.length == 0){
+						sitels = ["youtube.com", "netflix.com", "vimeo.com"];
+						chrome.storage.local.set({'sitels' : sitels});
+					}else{
+						sitels = data.sitels.slice();
+					}
+				}
+			
+				chrome.storage.local.get('bnmghj', function (d){
+					if(d.bnmghj == undefined){
+						chrome.storage.local.set({'bnmghj' : false});
+						exception = false;
+					}else{
+						exception = d.bnmghj;
+					}
+			
+					chrome.storage.local.get('bnmfgh', function(d1){
+						if(d1.bnmfgh == undefined){
+							chrome.storage.local.set({'bnmfgh' : true});
+							checkURL = false;
+						}else{
+							checkURL = !(d1.bnmfgh);
+						}
+				
+						chrome.storage.local.get('bnmhjk', function(d2){
+							if(d2.bnmhjk == undefined){
+								chrome.storage.local.set({'bnmhjk' : true});
+								currentOnly = true;
+							}else{
+								currentOnly = d2.bnmhjk;
+							}
+					
+							if(exception){
+								chrome.tabs.onUpdated.addListener(function (updatedTabId, changedInfo, updatedTab){
+									if(!disabled){
+										var negative = false;
+										chrome.tabs.query({active: true}, function(actArr){
+											if(currentOnly){
+												if(!chrome.runtime.lastError){
+													var isActive = false;
+													for(i = 0; i < actArr.length; i++){
+														if(actArr[i].id == updatedTabId){
+															isActive = true;
+															break;
+														}
+													}
+													if(!isActive){
+														negative = true;
+													}
+												}
+											}
+							
+											if(checkURL){
+												var url = updatedTab.url;
+												var domain = extractDomain(url);
+												if(sitels.indexOf(domain) == -1){
+													negative = true;
+												}
+											}
+								
+											if(changedInfo.audible){
+												if(!negative){
+													disabled = true;
+													lockOnIdle = false;
+													notify();
+												}	
+											}
+										});
+									}else{
+										chrome.tabs.query({audible: true}, function(audArr){
+											if(audArr.length == 0){
+												disabled = false;
+												lockOnIdle = true;
+												unNotify();
+											}else{
+												if(currentOnly && checkURL){
+													chrome.tabs.query({active : true, audible : true}, function(arr1){
+														if(arr1.length == 0){
+															disabled = false;
+															lockOnIdle = true;
+															unNotify();
+														}else{
+															for(i = 0; i < arr1.length; i++){
+																var domain = extractDomain(arr1[i].url);
+																if(sitels.indexOf(domain) > -1){
+																	break;
+																}
+															}
+										
+															if(i >= arr1.length){
+																disabled = false;
+																lockOnIdle = true;
+																unNotify();
+															}
+														}
+													});
+												}else if(currentOnly){
+													chrome.tabs.query({active : true, audible : true}, function(arr1){
+														if(arr1.length == 0){
+															disabled = false;
+															lockOnIdle = true;
+															unNotify();
+														}	
+													});
+												}else{
+													for(i = 0; i < arr1.length; i++){
+														var domain = extractDomain(arr1[i].url);
+														if(sitels.indexOf(domain) > -1){
+															break;
+														}
+													}
+									
+													if(i >= arr1.length){
+														disabled = false;
+														lockOnIdle = true;
+														unNotify();
+													}
+												}
+											}
+										});
+									}
+								});
+							}
+					
+						});
+					});
+				});
+			});
+		
+		}else{
+			enaTM = false;
+		}
+	});
+	
 	chrome.storage.local.get('hutoia', function(data){
 		switch(data.hutoia){
 			case undefined :    //check if password is set, If yes, Lock browser.
@@ -38,7 +188,164 @@ document.addEventListener('DOMContentLoaded', function () {
 			case true : console.log("case : true"); 
 		}
 	});
+	
+	chrome.storage.local.get({'sitels': []}, function (data){
+		if(data.seitels == undefined){
+			sitels = ["youtube.com", "netflix.com", "vimeo.com"];
+			chrome.storage.local.set({'sitels' : sitels});
+		}else{
+			if(data.sitels.length == 0){
+				sitels = ["youtube.com", "netflix.com", "vimeo.com"];
+				chrome.storage.local.set({'sitels' : sitels});
+			}
+		}
+	});
+	
+	
 });
+
+function checkTab(tabId){
+	var negative = false;
+	chrome.tabs.get(tabId, function(tab){
+		if(exception){
+			if(!disabled){
+				if(checkURL){
+					var domain = extractDomain(tab.url);
+					if(sitels.indexOf(domain) == -1){
+						negative = true;
+					}
+				}
+			
+				chrome.tabs.query({active: true}, function(actArr){	
+					if(currentOnly){
+						if(!chrome.runtime.lastError){
+							var isActive = false;
+						
+							for(i = 0; i < actArr.length; i++){
+								if(actArr[i].id == tab.id){
+									isActive = true;
+									break;
+								}
+							}
+							if(!isActive){
+								negative = true;
+							}
+						}
+					}
+			
+					if(tab.audible){
+						if(!negative){	
+							lockOnIdle = false;
+							notify();
+							disabled = true;
+						}
+					}
+			
+				});
+			}else{
+				chrome.tabs.query({audible: true}, function(audArr){
+					if(audArr.length == 0){
+						disabled = false;
+						lockOnIdle = true;
+						unNotify();
+					}else{
+						if(currentOnly && checkURL){
+							chrome.tabs.query({active : true, audible : true}, function(arr1){
+								if(arr1.length == 0){
+									disabled = false;
+									lockOnIdle = true;
+									unNotify();
+								}else{
+									for(i = 0; i < arr1.length; i++){
+										var domain = extractDomain(arr1[i].url);
+										if(sitels.indexOf(domain) > -1){
+											break;
+										}
+									}
+									
+									if(i >= arr1.length){
+										disabled = false;
+										lockOnIdle = true;
+										unNotify();
+									}
+								}
+							});
+						}else if(currentOnly){
+							chrome.tabs.query({active : true, audible : true}, function(arr1){
+								if(arr1.length == 0){
+									disabled = false;
+									lockOnIdle = true;
+									unNotify();
+								}
+							});
+						}else{
+							for(i = 0; i < arr1.length; i++){
+								var domain = extractDomain(arr1[i].url);
+								if(sitels.indexOf(domain) > -1){
+									break;
+								}
+							}
+									
+							if(i >= arr1.length){
+								disabled = false;
+								lockOnIdle = true;
+								unNotify();
+							}
+						}
+					}
+				});
+			}
+		}
+	});	
+}
+
+chrome.notifications.onButtonClicked.addListener(function(id, buttonIndex){
+	chrome.notifications.clear("autoOff");
+	if(buttonIndex == 1){
+		DND = true;
+	}
+});
+
+function notify(){
+	chrome.browserAction.setBadgeText({"text": "A"});
+	chrome.browserAction.setTitle({"title": "Chrome Lock.\nAuto Lock disabled."});
+	if(!DND){
+		var str1 = "At this time, Conditions you specified matches, Therefore chrome lock will not automatically lock you browser\nA red 'A' is shown on the icon of Chrome Lock indicating that Auto Lock is disabled.";
+		chrome.notifications.create("autoOff", {
+			"type" : "basic",
+			"iconUrl" : "/Images/icon128.png",
+			"title" : "Chrome Lock : Auto Lock Disabled",
+			"message" : "Automatic lock due to inactivity is disabled for now.",
+			"contextMessage" : str1,
+			"buttons" : [{"title": "OK"}, {"title" : "Don't show this message again."}],
+			"isClickable" : false
+		});
+	}
+}
+
+function unNotify(){
+	chrome.browserAction.setTitle({"title": "Chrome Lock."});
+	chrome.browserAction.setBadgeText({"text": ""});
+	chrome.notifications.clear("autoOff");
+}
+
+function extractDomain(url) {
+    var domain;
+    if (url.indexOf("://") > -1) {
+        domain = url.split('/')[2];
+    }
+    else {
+        domain = url.split('/')[0];
+    }
+    
+	domain = domain.split(':')[0];
+	if(domain.split('.').length > 2){
+		var splitArr = domain.split('.');
+		domain = splitArr[splitArr.length - 2] + '.' + splitArr[splitArr.length - 1]; 
+	}
+	
+	return domain;
+}
 
 window.onbeforeunload = function(){
 	chrome.storage.local.get('hutoia', function(data){
@@ -150,9 +457,32 @@ chrome.runtime.onMessage.addListener(
 								
 			case "codeWhite" : resp = onWhite(request, sender);
 							   break;
+							   
+			case "validate" : resp = validateTab(request);
+							  break;
 		}
 		sendResponse({methodReturn : resp});
 });
+
+function validateTab(request){
+	if(request.code == "248057"){
+		console.log("Code correct.");
+		if(loginTabs == null){
+			console.log(loginTabs);
+			return false;
+		}else{
+			for(i = 0; i < loginTabs.length; i++){
+				if(loginTabs[i].id == request.tabId){
+					return true;
+				}
+			}
+			return false;
+		}
+	}else{
+		alert("Error - 613.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+		return false;
+	}
+}
 
 function onWhite(request, sender){
 	if(request.code = "248057"){
@@ -355,7 +685,7 @@ chrome.windows.onFocusChanged.addListener(function (windowId) {
 				chrome.storage.local.get('uiower', function(d1){
 					if(!(d1.uiower)){
 						chrome.windows.get(windowId, function (w) {
-							if (w.incognito) {
+							if(w.incognito || (lockedWins.indexOf(windowId) == -1)){
 								chrome.windows.update(w.id,{state: "minimized"}, function (t){
 									if(chrome.runtime.lastError){
 										alert("Error - 612.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
@@ -370,9 +700,10 @@ chrome.windows.onFocusChanged.addListener(function (windowId) {
 	}
 });
 
-chrome.tabs.onActivated.addListener(function(activeInfo) {
+chrome.tabs.onActivated.addListener(function(activeInfo){
     lastActive = new Date();
 	
+	checkTab(activeInfo.tabId);
 	if (loginTabs != null) {
 		for(i = 0; i < loginTabs.length; i++) {
 			if(activeInfo.tabId == loginTabs[i].id) {
@@ -401,17 +732,22 @@ chrome.storage.local.get('pporte', function (d){
 
 chrome.idle.onStateChanged.addListener(function (newState){
 	console.log("StateChanged = " + newState);
+	chrome.idle.onStateChanged.removeListener();
 	switch(newState){
 		case "locked" : lockBrowser({code : "248057"});
 						break;
-		case "idle" : idleStateHandler();
+		case "idle" : if(enaTM){
+						idleStateHandler();
+					  }
 					  break;
 		case "active" : //do Nothing.!
 	}
 });
 
 function idleStateHandler(){
-	lockBrowser({code : "248057"});
+	if(lockOnIdle){
+		lockBrowser({code : "248057"});
+	}
 }
 
 chrome.contextMenus.create({

@@ -7,6 +7,10 @@ var ip1,ip2,ip3,bt1,bt2,bt3,cb1,cb2,tm1,ena;
 var randomDigs = [];
 var passwdChanged = false;
 var changesSaved = false;
+var i,exc,allst,ctonly,enatm;
+var tcb,tcb1,tcb2,trd1,trd2,tip1,innerOptions,siteList;
+var add,remove,list,tm,sel;
+var sitels = [];
 
 document.addEventListener('DOMContentLoaded', function(){
 	ip1 = document.querySelector('.ip1');
@@ -15,15 +19,29 @@ document.addEventListener('DOMContentLoaded', function(){
 	bt1 = document.querySelector('.bt1');
 	cb1 = document.querySelector('.cb1');
 	cb2 = document.querySelector('.cb2');
-	tm1 = document.querySelector('.timeOut');
 	bt2 = document.querySelector('.ftbt1');
 	bt3 = document.querySelector('.ftbt2');
 	ena = document.querySelector('.en');
+	tcb = document.querySelector('.tcb');
+	tm = document.querySelector('.tm');
+	tm1 = document.querySelector('.timeOut');
+	tcb1 = document.querySelector('.tcb1');
+	tcb2 = document.querySelector('.tcb2');
+	innerOptions = document.querySelector('.innerOptions');
+	trd1 = document.querySelector('.trd1');
+	trd2 = document.querySelector('.trd2');
+	siteList = document.querySelector('.siteList');
+	tip1 = document.querySelector('.tip1');
+	add = document.querySelector('.add');
+	remove = document.querySelector('.remove');
+	list = document.querySelector('.list');
+	sel = document.querySelector('.list');
+	
 	console.clear();
 	console.log("options.js loaded");
 	
 	chrome.storage.local.get({'randomDigs' : []}, function (data){
-		randomDigs = data.randomDigs.slice();;
+		randomDigs = data.randomDigs.slice();
 	});
 	
 	chrome.storage.local.get('uiower', function(d){
@@ -71,8 +89,6 @@ document.addEventListener('DOMContentLoaded', function(){
 			timeOut = 5;
 			chrome.storage.local.set({'pporte' : timeOut});
 	}
-	
-	document.querySelector('.tm').innerHTML += tmString1 + timeOut + tmSting2;
 	document.querySelector('.timeOut').value = timeOut;
 	
 	ip1.addEventListener("keypress", function(e){
@@ -91,12 +107,268 @@ document.addEventListener('DOMContentLoaded', function(){
 		}
 	});
 	
+	chrome.storage.local.get('bnmjkl', function(d){
+		if(d.bnmjkl == undefined){
+			enatm = true;
+			chrome.storage.local.set({'bnmjkl' : true});
+			return;
+		}
+		enatm = d.bnmjkl;
+		
+		chrome.storage.local.get('bnmghj', function(d){
+			if(d.bnmghj == undefined){
+				exc = false;
+				chrome.storage.local.set({'bnmghj' : false});
+				return;
+			}
+			exc = d.bnmghj;
+			
+			chrome.storage.local.get('bnmfgh', function(d){
+				if(d.bnmfgh == undefined){
+					allst = true;
+					chrome.storage.local.set({'bnmfgh' : true});
+					return;
+				}
+				allst = d.bnmfgh;
+				
+				chrome.storage.local.get('bnmhjk', function(d){
+					if(d.bnmhjk == undefined){
+						ctonly = true;
+						chrome.storage.local.set({'bnmhjk' : true});
+						return;
+					}
+					ctonly = d.bnmhjk;
+					
+					chrome.storage.local.get({'sitels' : []}, function(d){
+						if(d.sitels == undefined){
+							sitels = ["youtube.com", "netflix.com", "vimeo.com"];
+							chrome.storage.local.set({'sitels' : sitels});
+							return;
+						}else{
+							if(d.sitels.length == 0){
+								sitels = ["youtube.com", "netflix.com", "vimeo.com"];
+								chrome.storage.local.set({'sitels' : sitels});
+								return;
+							}
+						}
+						sitels = d.sitels.slice();
+						onLoad();
+					});
+				});
+			});
+		});
+	});
+	
 	bt1.addEventListener('click', bt1cl);
 	bt2.addEventListener('click', bt2cl);
 	bt3.addEventListener('click', bt3cl);
 	ena.addEventListener('click', enaclk);
+	tcb.addEventListener('click', tcbcl);
+	tcb1.addEventListener('click', tcb1cl);
+	trd1.addEventListener('click', trd1cl);
+	trd2.addEventListener('click', trd2cl);
+	tip1.addEventListener('keyup', tip1kd);
+	add.addEventListener('click', addcl);
+	remove.addEventListener('click', remcl);
 	
 });
+
+function tcbcl(){
+	if(tcb.checked){
+		enable(tm);
+		if(!tcb1.checked){
+			disable(innerOptions);
+		}
+	}else{
+		disable(tm);
+	}
+}
+
+function tcb1cl(){
+	if(tcb1.checked){
+		enable(innerOptions);
+		if(trd1.checked){
+			disable(siteList);
+		}else{
+			enable(siteList);
+		}
+	}else{
+		disable(innerOptions);
+	}
+}
+
+function trd1cl(){
+	disable(siteList);
+}
+
+function trd2cl(){
+	enable(siteList);
+	if(tip1.value.trim() == ""){
+		disable(add);
+	}
+	if(sel.selectedIndex == -1){
+		disable(remove);
+	}
+}
+
+function tip1kd(e){
+	if(tip1.value.trim() != ""){
+		enable(add);
+		if(e.keyCode == 13){
+			addcl();
+		}
+	}else{
+		disable(add);
+	}
+}
+
+function addcl(){
+	var str = tip1.value;
+	var domain = "";
+	if(!str == ""){
+		if(validate(str)){
+			if(sitels.indexOf(str) == -1){
+				var strArr = str.split('.');
+				if(strArr.length > 2){
+					if(strArr[0] == "www" || strArr[0] == "WWW"){
+						domain += strArr[i];
+						for(i = 2; i < strArr.length; i++){
+							domain += '.' + strArr[i];
+						}
+					}else{
+						domain = str;
+					}
+					if(sitels.indexOf(domain) == -1){
+						addtoList(domain, sitels.length);
+						sitels.push(domain);
+						tip1.value = "";
+					}else{
+						alert("op2 : The domain you are trying to add already exists.");
+						tip1.value = "";
+					}
+				}else if(strArr.length = 2){
+					addtoList(str, sitels.length);
+					sitels.push(str);
+					tip1.value = "";
+				}else{
+					alert("The domain you have entered is invalid. Try again.\nPlease don't add 'http' or 'ftp' or '//' or sub-domains.");
+					tip1.value = "";
+				}
+			}else{
+				alert("op1 : The domain you are trying to add already exists.");
+				tip1.value = "";
+			}
+		}else{
+			alert("The domain you have entered is invalid. Try again.\nPlease don't add 'http' or 'ftp' or '//' or sub-domains.");
+			tip1.value = "";
+		}
+	}
+}
+
+function validate(domain){ 
+    var re = new RegExp(/^((?:(?:(?:\w[\.\-\+]?)*)\w)+)((?:(?:(?:\w[\.\-\+]?){0,62})\w)+)\.(\w{2,6})$/); 
+    return domain.match(re);
+}
+
+function remcl(){
+	var index;
+	index = sel.selectedIndex;
+	if(index == -1){
+		// Do nothing.
+	}else{
+		sitels.splice(index, 1);
+		sel.removeChild(sel.options[index]);
+		disable(remove);
+	}
+}
+
+function opsl(){
+	enable(remove);
+}
+
+
+function onLoad(){
+	if(enatm){
+		tcb.checked = true;
+		enable(tm);
+		if(exc){
+			tcb1.checked = true;
+			enable(innerOptions);
+			if(allst){
+				trd1.checked = true;
+				disable(siteList);
+			}else{
+				trd2.checked = true;
+				enable(siteList);
+				disable(add);
+				disable(remove);
+			}
+		}else{
+			tcb1.checked = false;
+			disable(innerOptions);
+		}
+	}else{
+		tcb.checked = false;
+		disable(tm);
+	}
+	
+	for(i = 0; i < sitels.length; i++){
+		addtoList(sitels[i], i);
+	}
+}
+
+function addtoList(str, val){
+	var opt = document.createElement('option');
+	opt.appendChild(document.createTextNode(str));
+	opt.value = val;
+	opt.addEventListener("click", opsl);
+	list.appendChild(opt);
+}
+
+function disable(e){
+	var allChild = e.getElementsByTagName('*');
+
+	e.disabled = true;
+	for(i = 0; i < allChild.length; i++ ){
+		allChild[i].disabled = true;
+	}
+}
+
+function enable(e){
+	var allChild = e.getElementsByTagName('*');
+	
+	e.disabled = false;
+	for(i = 0; i < allChild.length; i++ ){
+		allChild[i].disabled = false;
+	}
+}
+
+function shake(e, oncomplete, distance, time) {
+    if (typeof e === "string") e = document.getElementById(e);
+    if (!time) time = 500;
+    if (!distance) distance = 5;
+
+    var originalStyle = e.style.cssText;
+    e.style.position = "relative";
+    var start = (new Date()).getTime();
+    animate();
+
+    function animate() {
+        var now = (new Date()).getTime();
+        var elapsed = now-start;
+        var fraction = elapsed/time;
+        
+        if (fraction < 1) {
+            var x = distance * Math.sin(fraction*4*Math.PI);
+            e.style.left = x + "px";
+            setTimeout(animate, Math.min(25, time-elapsed));
+        }
+        else {
+            e.style.cssText = originalStyle
+            if (oncomplete) oncomplete(e);
+        }
+    }
+}
 
 function enaclk(){
 	var newURL = "chrome://extensions/?id=" + chrome.runtime.id;
@@ -260,7 +532,7 @@ function bt1cl(){
 }
 
 function bt2cl(){
-	var data1,data2,data3,data4,flag1,flag2,data5,flag0;
+	var data1,data2,data3,data4,flag1,flag2,data5,flag0,tdat1,tdat2,tdat3,tdat4,tdat5;
 	
 	flag0 = confirm("Are you sure to save changes ?");
 	
@@ -271,6 +543,10 @@ function bt2cl(){
 		flag1 = document.querySelector('.cb1').checked;
 		flag2 = document.querySelector('.cb2').checked;
 		data5 = document.querySelector('.timeOut').value;
+		var tdat1 = tcb.checked;
+		var tdat2 = tcb1.checked;
+		var tdat3 = trd1.checked;
+		var tdat5 = tcb2.checked;
 	
 		if(mode == "set"){
 			if((data1.length != 0) && (data2.length != 0) && (data3.length != 0)){
@@ -291,6 +567,11 @@ function bt2cl(){
 			chrome.storage.local.set({'uiower': flag1});
 			chrome.storage.local.set({'pporte': data5});
 			chrome.storage.local.set({'tyudfg': flag2});
+			chrome.storage.local.set({'bnmjkl': tdat1});
+			chrome.storage.local.set({'bnmghj': tdat2});
+			chrome.storage.local.set({'bnmfgh': tdat3});
+			chrome.storage.local.set({'bnmhjk': tdat5});
+			chrome.storage.local.set({'sitels': sitels});
 			alert("Changes saved successfully.!");
 			window.close();
 		}

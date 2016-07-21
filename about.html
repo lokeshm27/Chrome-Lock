@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title> Options | Chrome Lock v1.0</title>
+		<title> About | Chrome Lock v1.0</title>
 		<script src="about.js"></script>
 		<style>
 			body{  
@@ -38,6 +38,39 @@
 				overflow-y: scroll;
 				height: 450px;
 			}
+			
+			input{
+				font-size: 14px;
+				margin-left: 25px;
+				margin-bottom: 15px;
+			}
+			
+			.ip1{
+				height: 25px;
+				line-height: 25px;
+				border-style: solid;
+				border-radius: 5px;
+				width: 300px;
+			}
+			
+			.ip1:focus{
+				outline-width: 0;
+			}
+			
+			button{
+				margin-left: 25px;
+				font-size: 14px;
+				font-weight: 900;
+			}
+			
+			.list{
+				width: 350px;
+				margin-left: 25px;
+			}
+			
+			select{
+				font-size: 14px;
+			}
 		</style>
 	</head>
 	
@@ -47,6 +80,37 @@
 				<img src="/Images/Logo-no-bg.jpg" width="300px" height="100px" />
 			</center>
 			<div class="main">
-				<button class="bt1">Sumbit</button>
+				<p>
+					<input type="checkbox" class="cb1"><strong> Dont automatically lock if Audio is playing from </strong></input><br />
+					<div class="innerOptions">
+						<p>
+							<input type="radio" name="Option" class="rd1" checked>From all sites.</input>
+							<br />
+							<input type="radio" name="Option" class="rd2">From sites with following Domains : </input>
+							<br />
+						</p>
+						<div class="siteList">
+							<p>
+								<input type="text" class="ip1" placeholder="  Eg : youtube.com or www.youtube.com">
+								<button class="add" ><img src="/Images/plus.png" />&nbsp;Add&nbsp;</button>
+								<button class="remove" disabled="true" ><img src="/Images/minus.png" height="14px"/>&nbsp;Remove&nbsp;</button><br />
+								<select name="list" class="list" size="10">
+								</select>
+							</p>
+						</div>
+					</div>
+					<p>
+						If you are watching a video or listening to a audio, and you don't want to lock chrome automatically due to inactivity, Then use this option. <br />
+						You can select 1st option which disable automatic lock when a audio is playing in current tab irrespective of the site.
+						If you want to disable auto lock only when audio is playing in selected sites, choose 2d option. This option checks the URL of current tab which is playing audio.
+						If the domain of the tab matches with the domain listed above, Auto lock will be disabled, And a Notification is shown.<br /> 
+						<br />
+						<strong>Note : </strong>This feature is still in beta-stage, May not work perfectly.<br />
+						There is no optimal way to detect if video is playing in a tab. So, Using Audio this feature is implemented.<br />
+						If audio is muted by any means, It is considered as a tab without Audio and this option will not work.
+					</p>
+					<br />
+					<button class="bt1">Sumbit</button>
+				</p>
 			</div>
 	</body>
