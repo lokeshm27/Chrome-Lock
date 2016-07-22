@@ -1,7 +1,7 @@
 'use strict';
 
 var incog = false;
-var data1,passwd,encrPasswd = [],passwdLength,i,j,u,randomDigs = [],charPasswd = [];
+var data1,encrPasswd = [],passwdLength,i,j,u,randomDigs = [];
 var startRandomDigs,numRandomDigs;
 var veryImpFlag = false;
 var flg1 = false;
@@ -167,7 +167,8 @@ String.prototype.replaceAll = function(search, replacement) {
 };
 
 function subclick(){
-	var ip = document.querySelector('.ip');
+	var ip,passwd,charPasswd = [];
+	ip = document.querySelector('.ip');
 	data1 = ip.value;
 	
 	if(data1.length == 0){

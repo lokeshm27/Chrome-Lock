@@ -1,14 +1,10 @@
-var i,j;
-var lastActive = new Date();
 var loginPage = "login.html";
 var loginTabs = [];
-var attempts = 0;
 var resp;
 var lockedWins = [];
 var hutoia;
 var optionsPage = "options.html";
 var randomDigs = [];
-var i,j;
 var encrPasswd;
 var pfl = false;
 var winArr;
@@ -18,14 +14,14 @@ var sitels = [];
 var enaTM = true;
 var exception = false,checkURL = false,currentOnly = true,lockOnIdle = true;
 var DND = false;
-var disabled = false
+var disabled = false;
+var firstMessage = false;
 
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("Chrome Locker is in Action");
 	
 	chrome.browserAction.setBadgeBackgroundColor({"color": "#FF0000"});
-	
 	chrome.storage.local.get('bnmjkl', function(dd){
 		if(dd.bnmjkl){
 			enaTM = true;
@@ -74,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
 											if(currentOnly){
 												if(!chrome.runtime.lastError){
 													var isActive = false;
+													var i;
 													for(i = 0; i < actArr.length; i++){
 														if(actArr[i].id == updatedTabId){
 															isActive = true;
@@ -116,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
 															lockOnIdle = true;
 															unNotify();
 														}else{
+															var i;
 															for(i = 0; i < arr1.length; i++){
 																var domain = extractDomain(arr1[i].url);
 																if(sitels.indexOf(domain) > -1){
@@ -139,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 														}	
 													});
 												}else{
+													var i;
 													for(i = 0; i < arr1.length; i++){
 														var domain = extractDomain(arr1[i].url);
 														if(sitels.indexOf(domain) > -1){
@@ -220,7 +219,7 @@ function checkTab(tabId){
 					if(currentOnly){
 						if(!chrome.runtime.lastError){
 							var isActive = false;
-						
+							var i;
 							for(i = 0; i < actArr.length; i++){
 								if(actArr[i].id == tab.id){
 									isActive = true;
@@ -256,6 +255,7 @@ function checkTab(tabId){
 									lockOnIdle = true;
 									unNotify();
 								}else{
+									var i;
 									for(i = 0; i < arr1.length; i++){
 										var domain = extractDomain(arr1[i].url);
 										if(sitels.indexOf(domain) > -1){
@@ -279,6 +279,7 @@ function checkTab(tabId){
 								}
 							});
 						}else{
+							var i;
 							for(i = 0; i < arr1.length; i++){
 								var domain = extractDomain(arr1[i].url);
 								if(sitels.indexOf(domain) > -1){
@@ -347,18 +348,21 @@ function extractDomain(url) {
 	return domain;
 }
 
-window.onbeforeunload = function(){
+chrome.runtime.setUninstallURL("http://www.chromelock.comxa.com/uninstallFeedback.php");
+
+chrome.runtime.onSuspend.addListener(function(){
 	chrome.storage.local.get('hutoia', function(data){
 		if(data.hutoia == true){
 			chrome.storage.local.set({'hutoia': false});
 		}
 	})
 	chrome.storage.local.set({'yrueit': false});
-}
+});
 
 chrome.runtime.onInstalled.addListener(function (details){
 	chrome.storage.local.get({'randomDigs': []}, function (data){
 		if(data.randomDigs.length == 0){
+			var i;
 			console.log("Generating random Numbers.!");
 			for(i=0;i<=50;i++){
 				num = Math.floor((Math.random() * 3 ) + 1); 
@@ -441,16 +445,15 @@ chrome.windows.onCreated.addListener(function(win) {
 	
 });
 
-chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse){
-		console.log("Message recieved : " + request.method); 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+	console.log("Message recieved : " + request.method);
+	if(sender.id == chrome.runtime.id){
 		switch(request.method){
-			
 			case "codeRed" : resp = reLockBrowser(request);
 							 break;
 							 
 			case "codeGreen" : resp = unLockBrowser(request);
-							    break;
+							   break;
 							   
 			case "codeYellow" : resp = lockBrowser(request);
 								break;
@@ -462,6 +465,9 @@ chrome.runtime.onMessage.addListener(
 							  break;
 		}
 		sendResponse({methodReturn : resp});
+	}else{
+		sendResponse({methodReturn : null});
+	}
 });
 
 function validateTab(request){
@@ -469,6 +475,7 @@ function validateTab(request){
 		if(loginTabs == null){
 			return false;
 		}else{
+			var i;
 			for(i = 0; i < loginTabs.length; i++){
 				if(loginTabs[i].id == request.tabId){
 					return true;
@@ -495,6 +502,7 @@ function onWhite(request, sender){
 function onLock(){
 	atConfirm = true;
 	var f1 = false;
+	var i;
 	var str = "Chrome Lock has locked your Browser.\n\nClick \"Ok\" and enter password to unlock your Browser.\nOR click \"Cancel\" to close browser.";
 	for(i=0; i<loginTabs.length; i++){
 		chrome.tabs.sendMessage(loginTabs[i].id, {method : "codeWhite", code : "248057"}, function(response){
@@ -510,11 +518,12 @@ function onLock(){
 		
 		f1 = confirm(str);
 		if(f1){
+			var i;
 			for(i=0; i<loginTabs.length; i++){
 				chrome.tabs.sendMessage(loginTabs[i].id, {method : "codeBlack", code : "248057"}, function(response){
-					/* if(response.methodReturn != 0){
+					if(response.methodReturn != 0){
 						alert("Error - 611.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
-					} */
+					}
 				});
 			}
 		}else{
@@ -530,6 +539,7 @@ function ultraRed(){
 	numWhites = 0;
 	chrome.windows.getAll(function(arr){
 		if(!arr.length == 0){
+			var i;
 			for(i=0; i<arr.length; i++){
 				chrome.windows.remove(arr[i].id);
 			}
@@ -603,6 +613,7 @@ function lockBrowser(request){
 				//Already under lockdown,
 			}else{
 				chrome.windows.getAll(function(winArray){
+					var i;
 					for(i = 0; i < winArray.length; i++){
 						if(winArray[i].type == "normal"){
 							if(!winArray[i].incognito){
@@ -660,11 +671,12 @@ function lockNewWindow(win){
 }
 
 function unLockBrowser(request){
-	if(unLockBrowser.caller != null){
-		if(request.code != "248057"){
+	if(request.code == "248057"){
+		if(unLockBrowser.caller != null){
 			var tabs = loginTabs;
 			loginTabs = [];
 			lockedWins = [];
+			var i;
 			for(i=0; i < tabs.length; i++){
 				chrome.tabs.remove(tabs[i].id, function (info){
 					if(chrome.runtime.lastError){
@@ -677,18 +689,19 @@ function unLockBrowser(request){
 			chrome.storage.local.set({'yrueit': false});
 			return 0;
 		}else{
-			console.log("Error - 614.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+			setTimeout(smartGuy, 3000);
+			alert("You are smart, But not smart enough.!\nDon't forget to check the console.!");
+			return "Want to work for me?";
 		}
 	}else{
-		setTimeout(smartGuy, 3000);
-		alert("You are smart, But not smart enough.!\nDon't forget to check the console.!");
-		return "Want to work for me?";
+		alert("Error - 614.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
 	}
 }
 
 function smartGuy(){
 	chrome.windows.getAll(function(arr){
 		if(!arr.length == 0){
+			var i;
 			for(i=0; i<arr.length; i++){
 				chrome.windows.remove(arr[i].id);
 			}
@@ -720,10 +733,9 @@ chrome.windows.onFocusChanged.addListener(function (windowId) {
 });
 
 chrome.tabs.onActivated.addListener(function(activeInfo){
-    lastActive = new Date();
-	
 	checkTab(activeInfo.tabId);
 	if (loginTabs != null) {
+		var i;
 		for(i = 0; i < loginTabs.length; i++) {
 			if(activeInfo.tabId == loginTabs[i].id) {
 				return;
