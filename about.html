@@ -21,55 +21,29 @@
 				top: 0;
 				left: 0;
 				width: 1200px;
-				height: 560px;
 				margin: 50px;
+			}
+			.main{
+				margin: 25px 0px 50px 0px;
+				border-style: solid;
+				border-color: grey;
+				border-radius: 25px;
+				border-width: 5px;
 			}
 			
 			p{
 				font-size: 14px;
 				margin-left: 20px;
 			}
-			
-			.main{
-				border-radius: 25px;
-				border-width: 5px;
-				border-style: groove;
-				border-color: lightgrey;
-				overflow-y: scroll;
-				height: 450px;
+			h1{
+				margin-left: 20px;
 			}
-			
-			input{
+			li{
+				margin-left: 20px;
 				font-size: 14px;
-				margin-left: 25px;
-				margin-bottom: 15px;
 			}
-			
-			.ip1{
-				height: 25px;
-				line-height: 25px;
-				border-style: solid;
-				border-radius: 5px;
-				width: 300px;
-			}
-			
-			.ip1:focus{
-				outline-width: 0;
-			}
-			
-			button{
-				margin-left: 25px;
-				font-size: 14px;
-				font-weight: 900;
-			}
-			
-			.list{
-				width: 350px;
-				margin-left: 25px;
-			}
-			
-			select{
-				font-size: 14px;
+			.thk{
+				margin-left: 20px;
 			}
 		</style>
 	</head>
@@ -80,37 +54,54 @@
 				<img src="/Images/Logo-no-bg.jpg" width="300px" height="100px" />
 			</center>
 			<div class="main">
-				<p>
-					<input type="checkbox" class="cb1"><strong> Dont automatically lock if Audio is playing from </strong></input><br />
-					<div class="innerOptions">
+			<br />
+			<h1> About Chrome Lock </h1>
+			<p>
+				Chrome Lock is an extension made to fulfill your needs secure your browser. There are many things that differentiates Chrome Lock from other extensions of same category such as 
+				<ul style="list-style-type:disc">
+					<li><h2> Security </h2>
 						<p>
-							<input type="radio" name="Option" class="rd1" checked>From all sites.</input>
-							<br />
-							<input type="radio" name="Option" class="rd2">From sites with following Domains : </input>
-							<br />
+							We worked hard on this extension to make this extension as secure as possible. This extension is more secure than other extensions, To give one example, Unlike other extensions the password is not stored raw. Since, Chrome will not encrypt the extension data and it's not difficult to access an extension's data. We implemented best methods 
+							to make this extenion secure, The advanced protection, but that may use more system resources, so We added an option to enable the Advanced protection.
+							With Advanced protection by passing the extensions security won't be a piece of cake.
 						</p>
-						<div class="siteList">
-							<p>
-								<input type="text" class="ip1" placeholder="  Eg : youtube.com or www.youtube.com">
-								<button class="add" ><img src="/Images/plus.png" />&nbsp;Add&nbsp;</button>
-								<button class="remove" disabled="true" ><img src="/Images/minus.png" height="14px"/>&nbsp;Remove&nbsp;</button><br />
-								<select name="list" class="list" size="10">
-								</select>
-							</p>
-						</div>
-					</div>
-					<p>
-						If you are watching a video or listening to a audio, and you don't want to lock chrome automatically due to inactivity, Then use this option. <br />
-						You can select 1st option which disable automatic lock when a audio is playing in current tab irrespective of the site.
-						If you want to disable auto lock only when audio is playing in selected sites, choose 2d option. This option checks the URL of current tab which is playing audio.
-						If the domain of the tab matches with the domain listed above, Auto lock will be disabled, And a Notification is shown.<br /> 
-						<br />
-						<strong>Note : </strong>This feature is still in beta-stage, May not work perfectly.<br />
-						There is no optimal way to detect if video is playing in a tab. So, Using Audio this feature is implemented.<br />
-						If audio is muted by any means, It is considered as a tab without Audio and this option will not work.
-					</p>
-					<br />
-					<button class="bt1">Sumbit</button>
-				</p>
-			</div>
+					</li>
+					<li><h2> Design </h2>
+						<p>
+							We have designed both looks (front-end) and functionality (back-end) of the extension as good as possible. We made sure that the design of the extension won't trouble you. 
+							We have emphasized on small details without which it will hard to work around the extension. This extension consits of many web-pages. We have designed the web pages as good as possible without taking much time. 
+						</p>
+					</li>
+					<li><h2> Options and Features </h2>
+						<p>
+							Chrome Lock extension come with many options. We have given you the choice to select how extension should behave in some conditions without effecting the functionality of the extension.
+							We have used the best method availbale to implement a feature, But Some features are still in beta-stage. Beta-Stage features works but it means that we have not yet tested its working in 
+							all possible conditions yet. We will remove the beta-stage warning as soon as the feature passes the tests. 
+						</p>
+					</li>
+					<li><h2> Permissions </h2>
+						<p>Chrome Lock requires only limited permission and we promise the we won't store your information in any manner. The permissions required and their need is listed below : 
+						<ul style="list-style-type:disc">
+							<li><strong>Tabs</strong> and <strong>Active Tab</strong> permission required to manipulate Tabs and Windows.</li>
+							<li><strong>Storage</strong> permission required to store password, password hint and other data.</strong>
+							<li><strong>Alarms</strong> permission required for advanced protection. This permission enables the extension to run some code at specified time intervals.</li>
+							<li><strong>Idle</strong> permission required to check chrome's idle state. Used in Inactivity Timeout Feature.</li>
+							<li><strong>Context Menu</strong> permission is required to add lock option in chrome right-click Menu ( Context Menu ).
+							<li><strong>Notifications</strong> permission is required to show notifications. Chrome Lock shows a notification when Auto Lock is disabled. If you don't want the notification to show,
+							you can block notifications from the extension.</li>
+						</ul>
+						</p>
+					</li>
+					<li><h2>Development and Support</h2>
+						<p>We will continue to develop the extensions to make it better and better. You can <a target="_blank" href="http://www.chromelock.comxa.com/contact.php">contact us </a>if you have any problem, Suggestion or feedback.
+						We promise that we will get back to you as soon as possible. We will consider your ideas to enforce security and for new features/Options. So, feel free to contact us or mail to : <a href="mailto:lockerteam16@gmail.com"> lockerteam16@gmail.com</a>
+						</p>
+					</li>
+				</ul>
+				<h2 class="thk">Icon By</h2>
+				<div class="thk"><p>Icon made by <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p></div>
+				</div>
+				<center><p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/"><img class="license" alt="Creative Commons License" style="border-width:0" src="/Images/cc-black.png" width="125px" height="50px" /></a><br />This extenion is licensed under a <a target="_blank" rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a> 	 	</p></center>
+			</p>
+		</div>
 	</body>

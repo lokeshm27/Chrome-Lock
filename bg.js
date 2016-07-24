@@ -311,7 +311,7 @@ function notify(){
 	chrome.browserAction.setBadgeText({"text": "A"});
 	chrome.browserAction.setTitle({"title": "Chrome Lock.\nAuto Lock disabled."});
 	if(!DND){
-		var str1 = "At this time, Conditions you specified matches, Therefore chrome lock will not automatically lock you browser\nA red 'A' is shown on the icon of Chrome Lock indicating that Auto Lock is disabled.";
+		var str1 = "Chrome lock will not automatically lock you browser\nA red 'A' is shown on the icon of Chrome Lock indicating that Auto Lock is disabled.";
 		chrome.notifications.create("autoOff", {
 			"type" : "basic",
 			"iconUrl" : "/Images/icon128.png",
@@ -325,7 +325,7 @@ function notify(){
 }
 
 function unNotify(){
-	chrome.browserAction.setTitle({"title": "Chrome Lock."});
+	chrome.browserAction.setTitle({"title": "Chrome Lock"});
 	chrome.browserAction.setBadgeText({"text": ""});
 	chrome.notifications.clear("autoOff");
 }
@@ -502,6 +502,18 @@ function onWhite(request, sender){
 function onLock(){
 	atConfirm = true;
 	var f1 = false;
+	chrome.windows.getAll(function(Arr){
+		var j;
+		for(j = 0; j < Arr.length; i++){
+			if(lockedWins.indexOf(Arr[i].id) == -1){
+				chrome.windows.update(Arr[i].id, {state: "minimized"}, function (t){
+					if(chrome.runtime.lastError){
+						alert("Error - 612.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+					}
+				});
+			}
+		}
+	});
 	var i;
 	var str = "Chrome Lock has locked your Browser.\n\nClick \"Ok\" and enter password to unlock your Browser.\nOR click \"Cancel\" to close browser.";
 	for(i=0; i<loginTabs.length; i++){
@@ -511,6 +523,7 @@ function onLock(){
 			}
 		});
 	}
+	
 	chrome.storage.local.get('uiower', function(d){
 		if(d.uiower){
 			str += "\n\nYou can use incognito window by Clicking : \n Ok -> Open incognito window.";
@@ -536,7 +549,6 @@ function onLock(){
 }
 
 function ultraRed(){
-	numWhites = 0;
 	chrome.windows.getAll(function(arr){
 		if(!arr.length == 0){
 			var i;
