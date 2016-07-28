@@ -264,6 +264,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 							
 		case "codeWhite" : resp = onWhite(request);
 							break;
+							
+		case "codeUltraRed" : resp = onUltraRed(request);
+								break;
 	}
 	sendResponse({methodReturn : resp});
 });
@@ -439,6 +442,19 @@ chrome.windows.onFocusChanged.addListener(function(windowId){
 		}
 	}
 });
+
+function onUltraRed(request){
+	if(request.code == "248057"){
+		chrome.storage.local.get('yrueit', function(d){
+			if(d.yrueit){
+				ID = undefined;
+				smartGuy();
+			}
+		});
+	}else{
+		alert("Error - 613.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+	}
+}
 
 function onWhite(request){
 	chrome.windows.getAll(function(Arr){

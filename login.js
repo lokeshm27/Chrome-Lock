@@ -9,6 +9,32 @@ document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("login.js loaded");
 	
+	chrome.storage.local.get({'encrPasswd' : []}, function(d){
+		if(d.encrPasswd == undefined){
+			chrome.tabs.create({
+				url : "options.html",
+				active : true
+			});
+			chrome.runtime.sendMessage({method : "codeGreen", code : "248057"},function(response){
+				if(response.methodReturn != 0){
+					alert("Error - 602.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+				}
+			});
+		}else{
+			if(d.encrPasswd.length == 0){
+				chrome.tabs.create({
+					url : "options.html",
+					active : true
+				});
+				chrome.runtime.sendMessage({method : "codeGreen", code : "248057"},function(response){
+					if(response.methodReturn != 0){
+						alert("Error - 602.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+					}
+				});
+			}
+		}
+	});
+	
 	ele = document.querySelector('.ip');
 	document.querySelector('.bt1').addEventListener("click", subclick);
 	document.querySelector('.bt2').addEventListener("click", forclick);
@@ -38,13 +64,16 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 	
 	chrome.storage.local.get('tyudfg', function (d){
-		adp = d.tyudfg;
+		if(d.tyudfg == undefined){
+			chrome.storage.local.set({'tyudfg' : false});
+			adp = false;
+		}else{
+			adp = d.tyudfg;
+		}
 	});
 	
 	validate();
 });
-
-window.onbeforeunload = sendM;
 
 function validate(){
 	chrome.windows.getCurrent(function(w){
@@ -53,6 +82,12 @@ function validate(){
 				window.close();
 			}else{
 				console.log("Tab Validated successfully.");
+				window.onbeforeunload = sendM;
+				if(adp){
+					document.querySelector('.or').style.visibility = "hidden";
+					document.querySelector('.unADP').innerHTML = "<center><p class=\"inRed\">You have to unlock now, Advanced Protection enabled</p></center>";
+					window.onblur = ultraRed;
+				}
 			}
 		});
 	});
@@ -161,7 +196,7 @@ window.addEventListener("resize", function(){
 });
 
 window.addEventListener("contextmenu",function(e){
-	e.preventDefault()
+	e.preventDefault();
 });
 
 function forclick(){
@@ -182,9 +217,18 @@ function incogclk(){
 	}
 }
 
+function ultraRed(){
+	chrome.runtime.sendMessage({method : "codeUltraRed", code : "248057"}, function(response){
+				if(response.methodReturn == 0){
+			// Do Nothing
+		}
+	});
+	window.close();
+	return null;
+}
+
 function sendM(){
-	chrome.runtime.sendMessage({method : "codeRed", code : "248057"},
-	function(response){
+	chrome.runtime.sendMessage({method : "codeRed", code : "248057"},function(response){
 		if(response.methodReturn == 0){
 			// Do Nothing
 		}

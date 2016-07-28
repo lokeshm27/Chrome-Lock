@@ -132,7 +132,6 @@ document.addEventListener('DOMContentLoaded', function(){
 				allst = d3.bnmfgh;
 				
 				chrome.storage.local.get('bnmhjk', function(d4){
-					console.log(d4.bnmhjk);
 					if(d4.bnmhjk == undefined){
 						ctonly = true;
 						chrome.storage.local.set({'bnmhjk' : true});
@@ -144,11 +143,13 @@ document.addEventListener('DOMContentLoaded', function(){
 						if(d5.sitels == undefined){
 							sitels = ["youtube.com", "netflix.com", "vimeo.com"];
 							chrome.storage.local.set({'sitels' : sitels});
+							onLoad();
 							return;
 						}else{
 							if(d5.sitels.length == 0){
 								sitels = ["youtube.com", "netflix.com", "vimeo.com"];
 								chrome.storage.local.set({'sitels' : sitels});
+								onLoad();
 								return;
 							}
 						}
@@ -175,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 function tcbcl(){
+	console.log(sitels);
 	if(tcb.checked){
 		enable(tm);
 		if(!tcb1.checked){
@@ -538,17 +540,21 @@ function bt2cl(){
 			alert("Inactivity timeout should be a Integer (Decimal points not allowed.!) greater than 2mins and less than 30mins.!");
 			document.querySelector('.timeOut').value = 5;
 		}else{
-			changesSaved = true;
-			chrome.storage.local.set({'uiower': flag1});
-			chrome.storage.local.set({'pporte': data5});
-			chrome.storage.local.set({'tyudfg': flag2});
-			chrome.storage.local.set({'bnmjkl': tdat1});
-			chrome.storage.local.set({'bnmghj': tdat2});
-			chrome.storage.local.set({'bnmfgh': tdat3});
-			chrome.storage.local.set({'bnmhjk': tdat5});
-			chrome.storage.local.set({'sitels': sitels});
-			alert("Changes saved successfully.!");
-			window.close();
+			if(flag1 && flag2){
+				alert("Can't allow the use of incognito window when Advanced Protection is enabled.");
+			}else{
+				changesSaved = true;
+				chrome.storage.local.set({'uiower': flag1});
+				chrome.storage.local.set({'pporte': data5});
+				chrome.storage.local.set({'tyudfg': flag2});
+				chrome.storage.local.set({'bnmjkl': tdat1});
+				chrome.storage.local.set({'bnmghj': tdat2});
+				chrome.storage.local.set({'bnmfgh': tdat3});
+				chrome.storage.local.set({'bnmhjk': tdat5});
+				chrome.storage.local.set({'sitels': sitels});
+				alert("Changes saved successfully.!");
+				window.close();
+			}
 		}
 	}else{
 		//do nothing
@@ -563,7 +569,6 @@ function bt3cl(){
 }
 
 function randomChar(){
-	 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	 return (possible.charAt(Math.floor(Math.random() * possible.length)));
+	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	return (possible.charAt(Math.floor(Math.random() * possible.length)));
 }
-
