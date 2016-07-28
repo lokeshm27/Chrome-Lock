@@ -1,22 +1,14 @@
-'use strict';
-
 var incog = false;
 var data1,encrPasswd = [],passwdLength,i,j,u,randomDigs = [];
 var startRandomDigs,numRandomDigs;
-var veryImpFlag = false;
-var flg1 = false;
-var body,win;
 var adp = false;
-var notImpFlag = false;
 var ele;
-var alarmSet = false;
+var test;
 
 document.addEventListener('DOMContentLoaded', function () {
 	console.clear();
 	console.log("login.js loaded");
 	
-	validate();
-	body = document.querySelector('.bd');
 	ele = document.querySelector('.ip');
 	document.querySelector('.bt1').addEventListener("click", subclick);
 	document.querySelector('.bt2').addEventListener("click", forclick);
@@ -47,32 +39,16 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 	chrome.storage.local.get('tyudfg', function (d){
 		adp = d.tyudfg;
-		console.log(adp);
 	});
 	
-	chrome.windows.getCurrent(function(w){
-		win = w;
-	});
-	
-	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
-	var resp;
-	console.log("Message recieved : " + request.method);
-	switch(request.method){
-		case "codeBlack" : resp = onBlack(request);
-						    break;
-							
-		case "codeWhite"  : resp = onWhite(request);
-							break;
-	}
-	sendResponse({methodReturn : resp});
-});
+	validate();
 });
 
 window.onbeforeunload = sendM;
 
 function validate(){
-	chrome.tabs.getCurrent(function(tab){
-		chrome.runtime.sendMessage({method : "validate", code : "248057", tabId : tab.id}, function(resp){
+	chrome.windows.getCurrent(function(w){
+		chrome.runtime.sendMessage({method : "validate", code : "248057", windowId : w.id}, function(resp){
 			if(resp.methodReturn == false){
 				window.close();
 			}else{
@@ -80,50 +56,6 @@ function validate(){
 			}
 		});
 	});
-}
-
-function onBlack(request){
-	console.log("Black");
-	if(request.code == "248057"){
-		body.style.visibility = 'visible';
-		ele.focus();
-		
-		if(adp){
-			alarmSet = true;
-			chrome.windows.update(win.id, {state: 'fullscreen'});
-			chrome.alarms.create("checkMax", {when: Date.now() + 100, periodInMinutes: 0.00166667});
-			chrome.alarms.onAlarm.addListener(function(alarm){
-				if(win.state != 'minimized' || 'fullscreen'){
-					chrome.windows.update(win.id, {state: 'fullscreen'});
-				}
-			});
-		}
-	}else{
-		alert("Error - 604.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
-	}
-	
-	return 0;
-}
-
-function onWhite(request){
-	console.log("White");
-	if(request.code == "248057"){
-		body.style.visibility = 'hidden';
-		if(adp){
-			if(alarmSet){
-			chrome.alarms.clear("checkMax", function(fl){
-					chrome.windows.update(win.id, {state: 'maximized'});
-					if(!fl){
-						alert("Error - 604.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
-					}
-				});
-			}
-		}
-	}else{
-		alert("Error - 604.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
-	}
-	
-	return 0;
 }
 
 function latclick(){
@@ -204,19 +136,12 @@ function subclick(){
 					alert("Password incorrect.!");
 					ip.value = "";
 				}else{
-					veryImpFlag = true;
-					if(adp){
-						chrome.alarms.clearAll(function(fl){
-							chrome.windows.update(win.id, {state: 'maximized'});
-							if(!fl){
-								alert("Error - 604.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
-							}
-						});
-					}
+					chrome.storage.local.set({'hutoia': true});
+					chrome.storage.local.set({'yrueit': false});
 					chrome.runtime.sendMessage({method : "codeGreen", code: "248057"},
 					function(response){
 						if(response.methodReturn == 0){
-							//window.close();
+							window.close();
 						}else{
 							alert("Error - 602.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
 						}
@@ -226,6 +151,18 @@ function subclick(){
 		});
 	}
 }
+
+window.addEventListener("resize", function(){
+	chrome.runtime.sendMessage({method : "codeBrown", code : "248057"}, function(response){
+		if(response.methodReturn != 0){
+			alert("Error - 615.\nSorry for your inconvenience.\nPlease Take a moment to report this problem.!");
+		}
+	});
+});
+
+window.addEventListener("contextmenu",function(e){
+	e.preventDefault()
+});
 
 function forclick(){
 	chrome.storage.local.get('aspire', function(d){
@@ -246,15 +183,11 @@ function incogclk(){
 }
 
 function sendM(){
-	if(!veryImpFlag){
-		chrome.tabs.getCurrent(function (Tab){
-			chrome.runtime.sendMessage({method : "codeRed", code : "248057", tab : Tab},
-			function(response){
-				if(response.methodReturn == 0){
-					// Do Nothing
-				}
-			});
-		});
-		return null;
-	}
+	chrome.runtime.sendMessage({method : "codeRed", code : "248057"},
+	function(response){
+		if(response.methodReturn == 0){
+			// Do Nothing
+		}
+	});
+	return null;
 }

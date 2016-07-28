@@ -86,8 +86,8 @@ document.addEventListener('DOMContentLoaded', function(){
 	});
 	
 	if(timeOut == undefined){
-			timeOut = 5;
-			chrome.storage.local.set({'pporte' : timeOut});
+		timeOut = 5;
+		chrome.storage.local.set({'pporte' : timeOut});
 	}
 	document.querySelector('.timeOut').value = timeOut;
 	
@@ -107,51 +107,52 @@ document.addEventListener('DOMContentLoaded', function(){
 		}
 	});
 	
-	chrome.storage.local.get('bnmjkl', function(d){
-		if(d.bnmjkl == undefined){
+	chrome.storage.local.get('bnmjkl', function(d1){
+		if(d1.bnmjkl == undefined){
 			enatm = true;
 			chrome.storage.local.set({'bnmjkl' : true});
 			return;
 		}
-		enatm = d.bnmjkl;
+		enatm = d1.bnmjkl;
 		
-		chrome.storage.local.get('bnmghj', function(d){
-			if(d.bnmghj == undefined){
+		chrome.storage.local.get('bnmghj', function(d2){
+			if(d2.bnmghj == undefined){
 				exc = false;
 				chrome.storage.local.set({'bnmghj' : false});
 				return;
 			}
-			exc = d.bnmghj;
+			exc = d2.bnmghj;
 			
-			chrome.storage.local.get('bnmfgh', function(d){
-				if(d.bnmfgh == undefined){
+			chrome.storage.local.get('bnmfgh', function(d3){
+				if(d3.bnmfgh == undefined){
 					allst = true;
 					chrome.storage.local.set({'bnmfgh' : true});
 					return;
 				}
-				allst = d.bnmfgh;
+				allst = d3.bnmfgh;
 				
-				chrome.storage.local.get('bnmhjk', function(d){
-					if(d.bnmhjk == undefined){
+				chrome.storage.local.get('bnmhjk', function(d4){
+					console.log(d4.bnmhjk);
+					if(d4.bnmhjk == undefined){
 						ctonly = true;
 						chrome.storage.local.set({'bnmhjk' : true});
 						return;
 					}
-					ctonly = d.bnmhjk;
+					ctonly = d4.bnmhjk;
 					
-					chrome.storage.local.get({'sitels' : []}, function(d){
-						if(d.sitels == undefined){
+					chrome.storage.local.get({'sitels' : []}, function(d5){
+						if(d5.sitels == undefined){
 							sitels = ["youtube.com", "netflix.com", "vimeo.com"];
 							chrome.storage.local.set({'sitels' : sitels});
 							return;
 						}else{
-							if(d.sitels.length == 0){
+							if(d5.sitels.length == 0){
 								sitels = ["youtube.com", "netflix.com", "vimeo.com"];
 								chrome.storage.local.set({'sitels' : sitels});
 								return;
 							}
 						}
-						sitels = d.sitels.slice();
+						sitels = d5.sitels.slice();
 						onLoad();
 					});
 				});
@@ -303,6 +304,7 @@ function onLoad(){
 				disable(add);
 				disable(remove);
 			}
+			tcb2.checked = ctonly;
 		}else{
 			tcb1.checked = false;
 			disable(innerOptions);

@@ -1,17 +1,18 @@
 {
 	"manifest_version": 2,
 	
-	"name": "Chrome Lock",
+	"name": "Chrome Lock Beta",
 	
-	"description": "Protect your Chrome browser with Password.!\nThe new Chrome Lock comes with many options and features and well designed pages. And We made it more secure than ever.",
+	"description": "Protect your Chrome browser with Password.!\nThe new Chrome Lock comes with many options and features and well designed web pages.",
 	
-	"version": "1.0.3",
+	"version": "1.1.0",
 	
 	"options_page": "options.html",
 	
 	"icons": { "16": "/Images/icon16.png",
 			   "48": "/Images/icon48.png",
-			   "128": "/Images/icon128.png" },
+			   "128": "/Images/icon128.png" 
+	},
 
 	"browser_action": {
 		"default_icon": "/Images/icon128.png",
